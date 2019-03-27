@@ -7,6 +7,7 @@ import preprocess_data.labeling.FrameLabelingStrategy;
 
 import java.util.ArrayList;
 
+//applies labeling strategy
 public class FrameConverter {
 
     private final FrameLabelingStrategy frameLabelingStrategy;

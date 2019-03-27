@@ -22,6 +22,7 @@ import org.nd4j.linalg.dataset.api.preprocessor.NormalizerMinMaxScaler;
 import org.nd4j.linalg.learning.config.Sgd;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 import preprocess_data.TrialDataManager;
+import preprocess_data.TrialDataManagerBuilder;
 import preprocess_data.TrialDataTransformation;
 import preprocess_data.data_manipulaton.FrameManipulationStrategy;
 import preprocess_data.data_manipulaton.FrameShuffleManipulator;
@@ -49,7 +50,8 @@ public class TestNormalization {
         FrameManipulationStrategy manipulationStrategy = new FrameShuffleManipulator(10);
         TrialNormalizationStrategy normalizationStrategy = new CentroidNormalization(0,1);
         TrialDataTransformation transformation = new TrialDataTransformation(frameLabelingStrategy, manipulationStrategy);
-        TrialDataManager trialDataManager = new TrialDataManager(transformation, normalizationStrategy);
+        TrialDataManager trialDataManager = new TrialDataManagerBuilder(transformation)
+                .withNormalization(normalizationStrategy).build();
 
         //DataSet Iterators
         JsonTrialRecordReader trainDataReader = new JsonTrialRecordReader(trialDataManager);

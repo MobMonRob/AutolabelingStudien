@@ -2,6 +2,7 @@ package deep_learning.tests;
 
 import deep_learning.execution.AutomaticConfigExecutor;
 import preprocess_data.TrialDataManager;
+import preprocess_data.TrialDataManagerBuilder;
 import preprocess_data.TrialDataTransformation;
 import preprocess_data.data_manipulaton.FrameManipulationStrategy;
 import preprocess_data.data_manipulaton.FrameShuffleManipulator;
@@ -24,7 +25,7 @@ public class ExecutorConfigs {
         FrameManipulationStrategy manipulationStrategy = new FrameShuffleManipulator(shuffles);
         TrialNormalizationStrategy normalizationStrategy = new CentroidNormalization(-1, 1);
         TrialDataTransformation transformation = new TrialDataTransformation(frameLabelingStrategy, manipulationStrategy);
-        TrialDataManager trialDataManager = new TrialDataManager(transformation, normalizationStrategy);
+        TrialDataManager trialDataManager = new TrialDataManagerBuilder(transformation).withNormalization(normalizationStrategy).build();
         return new AutomaticConfigExecutor(trainDirectory, testDirectory, logFile,
                 trialDataManager, 20);
     }
@@ -39,7 +40,7 @@ public class ExecutorConfigs {
         FrameManipulationStrategy manipulationStrategy = new FrameShuffleManipulator(20);
         TrialNormalizationStrategy normalizationStrategy = new CentroidNormalization(-1, 1);
         TrialDataTransformation transformation = new TrialDataTransformation(frameLabelingStrategy, manipulationStrategy);
-        TrialDataManager trialDataManager = new TrialDataManager(transformation, normalizationStrategy);
+        TrialDataManager trialDataManager = new TrialDataManagerBuilder(transformation).withNormalization(normalizationStrategy).build();
         return new AutomaticConfigExecutor(trainDirectory, testDirectory, logFile,
                 trialDataManager, 20);
     }

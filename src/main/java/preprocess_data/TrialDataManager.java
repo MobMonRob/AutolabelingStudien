@@ -8,6 +8,7 @@ import preprocess_data.data_normalization.TrialNormalizationStrategy;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Set;
 
 //manages json-parsing, normalization and transformation of trial-data
 public class TrialDataManager {
@@ -16,15 +17,18 @@ public class TrialDataManager {
     private final TrialDataTransformation dataTransformer;
     private final JsonToTrialParser jsonToTrialParser = new JsonToTrialParser();
     private TrialNormalizationStrategy normalizationStrategy;
+    private final Set<String> acceptedMarkers;
 
-    public TrialDataManager(TrialDataTransformation dataTransformer, TrialNormalizationStrategy normalizationStrategy) {
+    public TrialDataManager(TrialDataTransformation dataTransformer, TrialNormalizationStrategy normalizationStrategy,
+                            Set<String> acceptedMarkers) {
         this.dataTransformer = dataTransformer;
         this.normalizationStrategy = normalizationStrategy;
+        this.acceptedMarkers = acceptedMarkers;
+        jsonToTrialParser.addFilter(acceptedMarkers);
     }
 
     public TrialDataManager(TrialDataTransformation dataTransformer) {
-        this.dataTransformer = dataTransformer;
-        normalizationStrategy = null;
+        this(dataTransformer,null,null);
     }
 
     public void setTrialContent(JsonArray trialData) {
@@ -64,7 +68,6 @@ public class TrialDataManager {
     }
 
     public String getInfoString() {
-        return dataTransformer.getInfoString() + "\n"
-                + "Normalisierung: " + normalizationStrategy.toString();
+        return dataTransformer.getInfoString() + "\n" + "Normalisierung: " + normalizationStrategy.toString();
     }
 }
