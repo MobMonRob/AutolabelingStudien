@@ -19,6 +19,17 @@
             <artifactId>nd4j-native-platform</artifactId>
             <version>1.0.0-beta3</version>
         </dependency>
+        <!-- too use cuda remove nd4j-native-platform dependency and uncomment the following:
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-cuda-10.0</artifactId>
+            <version>1.0.0-beta3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.nd4j</groupId>
+            <artifactId>nd4j-cuda-10.0-platform</artifactId>
+            <version>1.0.0-beta3</version>
+        </dependency>-->
         <dependency>
             <groupId>org.datavec</groupId>
             <artifactId>datavec-api</artifactId>
