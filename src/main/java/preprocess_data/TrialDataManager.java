@@ -35,6 +35,7 @@ public class TrialDataManager {
             normalizationStrategy = normalizationStrategy.getNewInstance();
         }
         this.currentAmountOfFrames = trialData.size();
+        /*System.out.println("amount of frames: " + currentAmountOfFrames);*/
         getFramesFromJson(trialData);
     }
 

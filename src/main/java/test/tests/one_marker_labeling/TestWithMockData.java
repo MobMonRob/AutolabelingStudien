@@ -41,10 +41,11 @@ public class TestWithMockData {
         FrameLabelingStrategy frameLabelingStrategy = new OneTargetLabeling("1", 10);
         FrameManipulationStrategy manipulationStrategy = new FrameShuffleManipulator(20);
         TrialDataTransformation transformation = new TrialDataTransformation(frameLabelingStrategy, manipulationStrategy);
-        TrialDataManager trialDataManager = new TrialDataManager(transformation);
+        TrialDataManager trialDataManagerTrain = new TrialDataManager(transformation);
+        TrialDataManager trialDataManagerTest = new TrialDataManager(transformation);
 
         //DataSet Iterators
-        JsonTrialRecordReader trainDataReader = new JsonTrialRecordReader(trialDataManager);
+        JsonTrialRecordReader trainDataReader = new JsonTrialRecordReader(trialDataManagerTrain);
         trainDataReader.initialize(fileSplitTrain);
 
         //NN Config
@@ -73,7 +74,7 @@ public class TestWithMockData {
         trainIterator.setPreProcessor(normalizerMinMaxScaler);*/
 
         //test data
-        JsonTrialRecordReader testDataReader = new JsonTrialRecordReader(trialDataManager);
+        JsonTrialRecordReader testDataReader = new JsonTrialRecordReader(trialDataManagerTest);
         testDataReader.initialize(fileSplitTrain);
         RecordReaderDataSetIterator testDataIterator = new RecordReaderDataSetIterator(testDataReader,50000);
         org.nd4j.linalg.dataset.DataSet testData = testDataIterator.next();

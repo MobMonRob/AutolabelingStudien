@@ -49,16 +49,15 @@ public class TestSimpleConvolution {
         selectedLabels.add(markerLabels[4]);
         selectedLabels.add(markerLabels[5]);
 
-        TrialDataManager trialDataManager = TrialDataManagerBuilder.addTransformation(TrialDataTransformationBuilder
+        TrialDataManagerBuilder trialDataManager = TrialDataManagerBuilder.addTransformation(TrialDataTransformationBuilder
                 .addLabelingStrategy(new OneTargetLabeling("LELB", selectedLabels.size()))
                 .withManipulation(new FrameShuffleManipulator(10))
                 .build())
                 .withNormalization(new CentroidNormalization(0,1))
-                .filterMarkers(selectedLabels)
-                .build();
+                .filterMarkers(selectedLabels);
 
-        RandomizedTrialRecordReader train = new RandomizedTrialRecordReader(trialDataManager, 50000);
-        RandomizedTrialRecordReader test = new RandomizedTrialRecordReader(trialDataManager, 50000);
+        RandomizedTrialRecordReader train = new RandomizedTrialRecordReader(trialDataManager.build(), 50000);
+        RandomizedTrialRecordReader test = new RandomizedTrialRecordReader(trialDataManager.build(), 50000);
         train.initialize(new FileSplit(trainDirectory));
         test.initialize(new FileSplit(testDirectory));
 

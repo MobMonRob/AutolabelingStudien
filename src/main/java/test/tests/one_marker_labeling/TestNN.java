@@ -42,12 +42,13 @@ public class TestNN {
         FrameLabelingStrategy frameLabelingStrategy = new OneTargetLabeling("RASI", 35);
         FrameManipulationStrategy manipulationStrategy = new FrameShuffleManipulator(10);
         TrialDataTransformation transformation = new TrialDataTransformation(frameLabelingStrategy,manipulationStrategy);
-        TrialDataManager trialDataManager = new TrialDataManager(transformation);
+        TrialDataManager trialDataManagerTrain = new TrialDataManager(transformation);
+        TrialDataManager trialDataManagerTest = new TrialDataManager(transformation);
 
         //DataSet Iterators
-        JsonTrialRecordReader trainDataReader = new JsonTrialRecordReader(trialDataManager);
+        JsonTrialRecordReader trainDataReader = new JsonTrialRecordReader(trialDataManagerTrain);
         trainDataReader.initialize(fileSplitTrain);
-        JsonTrialRecordReader testDataReader = new JsonTrialRecordReader(trialDataManager);
+        JsonTrialRecordReader testDataReader = new JsonTrialRecordReader(trialDataManagerTest);
         testDataReader.initialize(fileSplitTest);
 
         //more is not needed. datavec assumes the last index of the data-array (record) as label.

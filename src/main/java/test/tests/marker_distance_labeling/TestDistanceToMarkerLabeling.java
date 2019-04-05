@@ -48,12 +48,12 @@ public class TestDistanceToMarkerLabeling {
         TrialNormalizationStrategy normalizationStrategy = new CentroidNormalization();
         FrameReorderingManipulator frameReorderingManipulator = new FrameReorderingManipulator(5, 2);
         TrialDataTransformation transformation = new TrialDataTransformation(frameLabelingStrategy, frameReorderingManipulator);
-        TrialDataManager trialDataManager = new TrialDataManagerBuilder(transformation).withNormalization(normalizationStrategy).build();
+        TrialDataManagerBuilder trialDataManager = new TrialDataManagerBuilder(transformation).withNormalization(normalizationStrategy);
 
         //DataSet Iterators
-        JsonTrialRecordReader trainDataReader = new JsonTrialRecordReader(trialDataManager);
+        JsonTrialRecordReader trainDataReader = new JsonTrialRecordReader(trialDataManager.build());
         trainDataReader.initialize(fileSplitTrain);
-        JsonTrialRecordReader testDataReader = new JsonTrialRecordReader(trialDataManager);
+        JsonTrialRecordReader testDataReader = new JsonTrialRecordReader(trialDataManager.build());
         testDataReader.initialize(fileSplitTest);
 
         DataSetIterator trainData = new RecordReaderDataSetIterator(trainDataReader, 20);

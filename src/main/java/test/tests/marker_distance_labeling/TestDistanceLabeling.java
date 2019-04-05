@@ -50,11 +50,11 @@ public class TestDistanceLabeling {
         FrameManipulationStrategy manipulationStrategy = new FrameShuffleManipulator(3);
         TrialNormalizationStrategy normalizationStrategy = new CentroidNormalization(-100,100);
         TrialDataTransformation transformation = new TrialDataTransformation(frameLabelingStrategy, manipulationStrategy);
-        TrialDataManager trialDataManager = new TrialDataManagerBuilder(transformation).withNormalization(normalizationStrategy).build();
+        TrialDataManagerBuilder trialDataManager = new TrialDataManagerBuilder(transformation).withNormalization(normalizationStrategy);
 
         //DataSet Iterators
-        JsonTrialRecordReader trainDataReader = new JsonTrialRecordReader(trialDataManager);
-        JsonTrialRecordReader testDataReader = new JsonTrialRecordReader(trialDataManager);
+        JsonTrialRecordReader trainDataReader = new JsonTrialRecordReader(trialDataManager.build());
+        JsonTrialRecordReader testDataReader = new JsonTrialRecordReader(trialDataManager.build());
         trainDataReader.initialize(fileSplitTrain);
         testDataReader.initialize(fileSplitTest);
         for (Writable writable : trainDataReader.next()) {

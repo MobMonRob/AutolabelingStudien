@@ -25,7 +25,7 @@ public class ExecutorConfigs {
         FrameManipulationStrategy manipulationStrategy = new FrameShuffleManipulator(shuffles);
         TrialNormalizationStrategy normalizationStrategy = new CentroidNormalization(-1, 1);
         TrialDataTransformation transformation = new TrialDataTransformation(frameLabelingStrategy, manipulationStrategy);
-        TrialDataManager trialDataManager = new TrialDataManagerBuilder(transformation).withNormalization(normalizationStrategy).build();
+        TrialDataManagerBuilder trialDataManager = new TrialDataManagerBuilder(transformation).withNormalization(normalizationStrategy);
         return new AutomaticConfigExecutor(trainDirectory, testDirectory, logFile,
                 trialDataManager, 20);
     }
@@ -40,7 +40,7 @@ public class ExecutorConfigs {
         FrameManipulationStrategy manipulationStrategy = new FrameShuffleManipulator(20);
         TrialNormalizationStrategy normalizationStrategy = new CentroidNormalization(-1, 1);
         TrialDataTransformation transformation = new TrialDataTransformation(frameLabelingStrategy, manipulationStrategy);
-        TrialDataManager trialDataManager = new TrialDataManagerBuilder(transformation).withNormalization(normalizationStrategy).build();
+        TrialDataManagerBuilder trialDataManager = new TrialDataManagerBuilder(transformation).withNormalization(normalizationStrategy);
         return new AutomaticConfigExecutor(trainDirectory, testDirectory, logFile,
                 trialDataManager, 20);
     }

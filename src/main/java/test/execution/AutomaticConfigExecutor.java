@@ -1,6 +1,7 @@
 package test.execution;
 
 import datavec.JsonTrialRecordReader;
+import preprocess_data.builders.TrialDataManagerBuilder;
 import test.execution.result_logging.ResultLogger;
 import org.datavec.api.split.FileSplit;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
@@ -25,7 +26,7 @@ public class AutomaticConfigExecutor {
     private final ArrayList<TrainingListener> listeners = new ArrayList<>();
     private final DL4JNetworkTrainer networkExecutor;
 
-    public AutomaticConfigExecutor(File train, File test, File logFile, TrialDataManager dataManager, int batchSize,
+    public AutomaticConfigExecutor(File train, File test, File logFile, TrialDataManagerBuilder dataManager, int batchSize,
                                    NormalizerMinMaxScaler normalizer) throws IOException, InterruptedException, InstantiationException, IllegalAccessException {
         this(train, test, logFile, dataManager, batchSize);
         addPreProcessors(normalizer, trainIterator);
@@ -33,11 +34,12 @@ public class AutomaticConfigExecutor {
         this.resultLogger.logNormalizer(normalizer);
     }
 
-    public AutomaticConfigExecutor(File train, File test, File logFile, TrialDataManager dataManager, int batchSize) throws IOException, InterruptedException {
+    public AutomaticConfigExecutor(File train, File test, File logFile, TrialDataManagerBuilder dataManager, int batchSize) throws IOException, InterruptedException {
         this.resultLogger = new ResultLogger(logFile);
-        this.trainIterator = initIterator(train, dataManager, batchSize);
-        this.testIterator = initIterator(test, dataManager, batchSize);
-        this.resultLogger.logDataInfo(dataManager, batchSize);
+        TrialDataManager trainDataManager = dataManager.build();
+        this.trainIterator = initIterator(train, trainDataManager, batchSize);
+        this.testIterator = initIterator(test, dataManager.build(), batchSize);
+        this.resultLogger.logDataInfo(trainDataManager, batchSize);
         this.networkExecutor = new DL4JNetworkTrainer(trainIterator);
     }
 

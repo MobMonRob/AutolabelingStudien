@@ -1,6 +1,8 @@
 package test.tests.one_marker_labeling.convolution;
 
+import datavec.JsonTrialRecordReader;
 import datavec.RandomizedTrialRecordReader;
+import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
 import org.datavec.api.split.FileSplit;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.deeplearning4j.nn.conf.ComputationGraphConfiguration;
@@ -10,23 +12,23 @@ import org.deeplearning4j.optimize.api.TrainingListener;
 import org.deeplearning4j.optimize.listeners.EvaluativeListener;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.nd4j.evaluation.classification.Evaluation;
+import preprocess_data.DataPreprocessor;
 import preprocess_data.TrialDataManager;
 import preprocess_data.builders.TrialDataManagerBuilder;
 import preprocess_data.builders.TrialDataTransformationBuilder;
 import preprocess_data.data_manipulaton.FrameShuffleManipulator;
-import preprocess_data.data_normalization.CentroidNormalization;
 import preprocess_data.labeling.OneTargetLabeling;
 import test.execution.DL4JNetworkTrainer;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.TreeSet;
 
 public class TestComputationGraphConfigs {
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws Exception {
 
-        File trainDirectory = new File("C:\\Users\\Nico Rinck\\Documents\\DHBW\\Studienarbeit\\Daten_Studienarbeit\\trainData\\train");
+        File trainDirectory = new File("C:\\Users\\Nico Rinck\\Documents\\DHBW\\Studienarbeit\\Daten_Studienarbeit\\trainData\\train"); //\01_SS_O1_S1_Abd.json
         File testDirectory = new File("C:\\Users\\Nico Rinck\\Documents\\DHBW\\Studienarbeit\\Daten_Studienarbeit\\testData\\test");
         String[] markerLabels = {"C7", "CLAV", "LASI", "LELB", "LELBW", "LHUM4", "LHUMA", "LHUMP", "LHUMS", "LRAD", "LSCAP1", "LSCAP2", "LSCAP3", "LSCAP4", "LULN", "RASI", "RELB", "RELBW", "RHUM4", "RHUMA", "RHUMP", "RHUMS", "RRAD", "RSCAP1", "RSCAP2", "RSCAP3", "RSCAP4", "RULN", "SACR", "STRN", "T10", "THRX1", "THRX2", "THRX3", "THRX4"};
         TreeSet<String> selectedLabels = new TreeSet<>(Arrays.asList(markerLabels));
@@ -34,21 +36,29 @@ public class TestComputationGraphConfigs {
         int batchSize = 20; //total amount of data should be multiple of batchSize (prevent error in last batch)
         int recordReaderStorage = shuffles * 2000;
 
-        TrialDataManager trialDataManager = TrialDataManagerBuilder.addTransformation(TrialDataTransformationBuilder
+        TrialDataManagerBuilder dataManagerBuilder = TrialDataManagerBuilder.addTransformation(TrialDataTransformationBuilder
                 .addLabelingStrategy(new OneTargetLabeling("LELB", selectedLabels.size()))
                 .withManipulation(new FrameShuffleManipulator(shuffles))
                 .build())
-                .withNormalization(new CentroidNormalization(-1, 1))
-                .filterMarkers(selectedLabels)
-                .build();
+                /*.withNormalization(new CentroidNormalization(-1, 1))*/
+                .filterMarkers(selectedLabels);
 
-        RandomizedTrialRecordReader train = new RandomizedTrialRecordReader(trialDataManager, recordReaderStorage);
-        RandomizedTrialRecordReader test = new RandomizedTrialRecordReader(trialDataManager, recordReaderStorage);
+
+        RandomizedTrialRecordReader train = new RandomizedTrialRecordReader(dataManagerBuilder.build(), recordReaderStorage);
+        RandomizedTrialRecordReader test = new RandomizedTrialRecordReader(dataManagerBuilder.build(), recordReaderStorage);
+        /*JsonTrialRecordReader train = new JsonTrialRecordReader(dataManagerBuilder.build());
+        JsonTrialRecordReader test = new JsonTrialRecordReader(dataManagerBuilder.build());*/
         train.initialize(new FileSplit(trainDirectory));
         test.initialize(new FileSplit(testDirectory));
 
         RecordReaderDataSetIterator trainIterator = new RecordReaderDataSetIterator(train, batchSize);
         RecordReaderDataSetIterator testIterator = new RecordReaderDataSetIterator(test, batchSize);
+
+        /*DataPreprocessor dataPreprocessor = new DataPreprocessor(1000);
+        String saveDirectory = "C:\\Users\\Nico Rinck\\Documents\\DHBW\\Studienarbeit\\Daten_Studienarbeit\\save";
+        CSVRecordReader csvRecordReader = dataPreprocessor.saveDataToFile(train, saveDirectory);
+        System.out.println(csvRecordReader.next());*/
+
 
         //best: multipleReshapes(,20,20,10) in 5 Epochen
         //beobachtung: hoher Wert bei cnn2Channels --> am anfang lernt es sehr langsam, dann am besten (bei 10)
@@ -57,24 +67,19 @@ public class TestComputationGraphConfigs {
                 new ScoreIterationListener(10000)};
         networkTrainer.addListeners(listeners);
 
-        /*ArrayList<ComputationGraphConfiguration> configs = new ArrayList<>();
-        configs.add(ConvolutionConfigs.multipleReshapes(selectedLabels, batchSize, 20, 10));
-        configs.add(ConvolutionConfigs.multipleReshapes(selectedLabels, batchSize, 10, 10));
-        configs.add(ConvolutionConfigs.multipleReshapes(selectedLabels, batchSize, 5, 5));
-        configs.add(ConvolutionConfigs.multipleReshapes(selectedLabels, batchSize, 10, 20));*/
         //ComputationGraphConfiguration graph = ConvolutionConfigs.treeReshapesOneDeepLayer(selectedLabels, batchSize, 20, 10, 1); --> 92%
-        /*ComputationGraphConfiguration graph = ConvolutionConfigs.treeReshapesOneDeepLayer(selectedLabels, batchSize, 40, 20, 10); --> 95,4% (20 Epochen)*/
-        /*ComputationGraphConfiguration graph = ConvolutionConfigs.treeReshapesMultipleDeepLayers(selectedLabels, batchSize, 40, 20, 10) --> 95,2 (10 Epochen)*/
-        /*ComputationGraphConfiguration graph = ConvolutionConfigs.treeReshapesMultipleDeepLayers(selectedLabels, batchSize, 50, 10, 5);*/
-        /*ComputationGraphConfiguration graph = ConvolutionConfigs.treeReshapesMultipleDeepLayers(selectedLabels, batchSize, 20, 10, 5); (20 Epochen) --> 96%*/
+        //ComputationGraphConfiguration graph = ConvolutionConfigs.treeReshapesOneDeepLayer(selectedLabels, batchSize, 40, 20, 10); --> 95,4% (20 Epochen)
+        //ComputationGraphConfiguration graph = ConvolutionConfigs.treeReshapesMultipleDeepLayers(selectedLabels, batchSize, 40, 20, 10) --> 95,2 (10 Epochen)
+        //ComputationGraphConfiguration graph = ConvolutionConfigs.treeReshapesMultipleDeepLayers(selectedLabels, batchSize, 50, 10, 5);
+        //ComputationGraphConfiguration graph = ConvolutionConfigs.treeReshapesMultipleDeepLayers(selectedLabels, batchSize, 20, 10, 5); (20 Epochen) --> 96%
         ComputationGraphConfiguration graph = ConvolutionConfigs.treeReshapesMultipleDeepLayers(selectedLabels, batchSize, 20, 10, 5);
         ComputationGraph computationGraph = new ComputationGraph(graph);
         computationGraph.init();
         computationGraph.addListeners(listeners);
-        computationGraph.fit(trainIterator,20);
+        computationGraph.fit(trainIterator, 20);
 
         Evaluation eval = computationGraph.evaluate(testIterator);
-        System.out.println(eval.stats(true,true));
+        System.out.println(eval.stats(true, true));
     }
 
     /* feedforward and log path to test layer outputs.

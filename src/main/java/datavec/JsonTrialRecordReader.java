@@ -20,7 +20,7 @@ import java.util.NoSuchElementException;
 public class JsonTrialRecordReader extends BaseRecordReader {
 
     protected TrialDataManager trialDataManager;
-    protected TrialFileIterator fileIterator;
+    TrialFileIterator fileIterator;
     private Iterator<ArrayList<Writable>> fileContentIterator;
     private FileSplit fileSplit;
 
@@ -37,7 +37,7 @@ public class JsonTrialRecordReader extends BaseRecordReader {
         initIterators(fileSplit);
     }
 
-    protected void initIterators(final FileSplit fileSplit) {
+    void initIterators(final FileSplit fileSplit) {
         fileIterator = new TrialFileIterator(fileSplit);
         trialDataManager.setTrialContent(fileIterator.next());
         fileContentIterator = trialDataManager.getNextTrialContent().iterator();
