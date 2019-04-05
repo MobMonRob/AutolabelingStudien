@@ -64,11 +64,14 @@ public class TestComputationGraphConfigs {
         configs.add(ConvolutionConfigs.multipleReshapes(selectedLabels, batchSize, 10, 20));*/
         //ComputationGraphConfiguration graph = ConvolutionConfigs.treeReshapesOneDeepLayer(selectedLabels, batchSize, 20, 10, 1); --> 92%
         /*ComputationGraphConfiguration graph = ConvolutionConfigs.treeReshapesOneDeepLayer(selectedLabels, batchSize, 40, 20, 10); --> 95,4% (20 Epochen)*/
-        ComputationGraphConfiguration graph = ConvolutionConfigs.treeReshapesMultipleDeepLayers(selectedLabels, batchSize, 40, 20, 10);
+        /*ComputationGraphConfiguration graph = ConvolutionConfigs.treeReshapesMultipleDeepLayers(selectedLabels, batchSize, 40, 20, 10) --> 95,2 (10 Epochen)*/
+        /*ComputationGraphConfiguration graph = ConvolutionConfigs.treeReshapesMultipleDeepLayers(selectedLabels, batchSize, 50, 10, 5);*/
+        /*ComputationGraphConfiguration graph = ConvolutionConfigs.treeReshapesMultipleDeepLayers(selectedLabels, batchSize, 20, 10, 5); (20 Epochen) --> 96%*/
+        ComputationGraphConfiguration graph = ConvolutionConfigs.treeReshapesMultipleDeepLayers(selectedLabels, batchSize, 20, 10, 5);
         ComputationGraph computationGraph = new ComputationGraph(graph);
         computationGraph.init();
         computationGraph.addListeners(listeners);
-        computationGraph.fit(trainIterator,10);
+        computationGraph.fit(trainIterator,20);
 
         Evaluation eval = computationGraph.evaluate(testIterator);
         System.out.println(eval.stats(true,true));
