@@ -40,7 +40,8 @@ public class SequentialMarkerwiseTrialRecordReader extends JsonTrialRecordReader
     @Override
     public void initialize(InputSplit inputSplit) throws IOException, InterruptedException, IllegalArgumentException {
         initMarkerStringIterator(); //set first Marker as Filter
-        this.initIterators((FileSplit) inputSplit);
+        this.fileSplit = (FileSplit) inputSplit;
+        this.initIterators(fileSplit);
         initNewTrial();
     }
 
@@ -86,6 +87,7 @@ public class SequentialMarkerwiseTrialRecordReader extends JsonTrialRecordReader
         setMarkerFilter(markerStringsIterator.next()); //set first Marker as Filter
     }
 
+    //returns true with empty records
     public boolean hasNext() {
         return !(!sequenceLeftInTrial() && !markerStringsIterator.hasNext() && !fileIterator.hasNext());
     }
@@ -102,7 +104,9 @@ public class SequentialMarkerwiseTrialRecordReader extends JsonTrialRecordReader
             currentSequenceLength--;
         }
         for (int length = currentSequenceLength; length > 0; length--) {
-            resultList.add(super.next());
+            if (super.hasNext()) {
+                resultList.add(super.next());
+            }
         }
         return resultList;
     }

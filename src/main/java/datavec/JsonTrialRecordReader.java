@@ -19,10 +19,10 @@ import java.util.NoSuchElementException;
 
 public class JsonTrialRecordReader extends BaseRecordReader {
 
-    protected TrialDataManager trialDataManager;
+    TrialDataManager trialDataManager;
     TrialFileIterator fileIterator;
     private Iterator<ArrayList<Writable>> fileContentIterator;
-    private FileSplit fileSplit;
+    FileSplit fileSplit;
 
     public JsonTrialRecordReader(TrialDataManager trialDataManager) {
         this.trialDataManager = trialDataManager;

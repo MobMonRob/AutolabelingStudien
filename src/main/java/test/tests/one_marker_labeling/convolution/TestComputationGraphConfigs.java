@@ -1,8 +1,6 @@
 package test.tests.one_marker_labeling.convolution;
 
-import datavec.JsonTrialRecordReader;
 import datavec.RandomizedTrialRecordReader;
-import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
 import org.datavec.api.split.FileSplit;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.deeplearning4j.nn.conf.ComputationGraphConfiguration;
@@ -12,16 +10,15 @@ import org.deeplearning4j.optimize.api.TrainingListener;
 import org.deeplearning4j.optimize.listeners.EvaluativeListener;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.nd4j.evaluation.classification.Evaluation;
-import preprocess_data.DataPreprocessor;
-import preprocess_data.TrialDataManager;
+import preprocess_data.FrameDataPreprocessor;
 import preprocess_data.builders.TrialDataManagerBuilder;
 import preprocess_data.builders.TrialDataTransformationBuilder;
 import preprocess_data.data_manipulaton.FrameShuffleManipulator;
+import preprocess_data.data_normalization.CentroidNormalization;
 import preprocess_data.labeling.OneTargetLabeling;
 import test.execution.DL4JNetworkTrainer;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.TreeSet;
 
@@ -40,25 +37,27 @@ public class TestComputationGraphConfigs {
                 .addLabelingStrategy(new OneTargetLabeling("LELB", selectedLabels.size()))
                 .withManipulation(new FrameShuffleManipulator(shuffles))
                 .build())
-                /*.withNormalization(new CentroidNormalization(-1, 1))*/
+                .withNormalization(new CentroidNormalization(-1, 1))
                 .filterMarkers(selectedLabels);
 
 
-        RandomizedTrialRecordReader train = new RandomizedTrialRecordReader(dataManagerBuilder.build(), recordReaderStorage);
-        RandomizedTrialRecordReader test = new RandomizedTrialRecordReader(dataManagerBuilder.build(), recordReaderStorage);
-        /*JsonTrialRecordReader train = new JsonTrialRecordReader(dataManagerBuilder.build());
-        JsonTrialRecordReader test = new JsonTrialRecordReader(dataManagerBuilder.build());*/
-        train.initialize(new FileSplit(trainDirectory));
-        test.initialize(new FileSplit(testDirectory));
+        FrameDataPreprocessor preprocessor = new FrameDataPreprocessor(recordReaderStorage * 2);
+        String saveTrain = "C:\\Users\\Nico Rinck\\Documents\\DHBW\\Studienarbeit\\Daten_Studienarbeit\\save\\train";
+        String saveTest = "C:\\Users\\Nico Rinck\\Documents\\DHBW\\Studienarbeit\\Daten_Studienarbeit\\save\\test";
 
-        RecordReaderDataSetIterator trainIterator = new RecordReaderDataSetIterator(train, batchSize);
-        RecordReaderDataSetIterator testIterator = new RecordReaderDataSetIterator(test, batchSize);
-
-        /*DataPreprocessor dataPreprocessor = new DataPreprocessor(1000);
-        String saveDirectory = "C:\\Users\\Nico Rinck\\Documents\\DHBW\\Studienarbeit\\Daten_Studienarbeit\\save";
-        CSVRecordReader csvRecordReader = dataPreprocessor.saveDataToFile(train, saveDirectory);
-        System.out.println(csvRecordReader.next());*/
-
+        RecordReaderDataSetIterator trainIterator;
+        RecordReaderDataSetIterator testIterator;
+        if (FrameDataPreprocessor.directoryHasData(saveTrain) && FrameDataPreprocessor.directoryHasData(saveTest)) {
+            trainIterator = new RecordReaderDataSetIterator(preprocessor.getReader(saveTrain), batchSize, 105, 35);
+            testIterator = new RecordReaderDataSetIterator(preprocessor.getReader(saveTest), batchSize, 105, 35);
+        } else {
+            RandomizedTrialRecordReader train = new RandomizedTrialRecordReader(dataManagerBuilder.build(), recordReaderStorage);
+            RandomizedTrialRecordReader test = new RandomizedTrialRecordReader(dataManagerBuilder.build(), recordReaderStorage);
+            train.initialize(new FileSplit(trainDirectory));
+            test.initialize(new FileSplit(testDirectory));
+            trainIterator = new RecordReaderDataSetIterator(preprocessor.saveDataToFile(train, saveTrain), batchSize, 105, 35);
+            testIterator = new RecordReaderDataSetIterator(preprocessor.saveDataToFile(train, saveTest), batchSize, 105, 35);
+        }
 
         //best: multipleReshapes(,20,20,10) in 5 Epochen
         //beobachtung: hoher Wert bei cnn2Channels --> am anfang lernt es sehr langsam, dann am besten (bei 10)
@@ -71,8 +70,9 @@ public class TestComputationGraphConfigs {
         //ComputationGraphConfiguration graph = ConvolutionConfigs.treeReshapesOneDeepLayer(selectedLabels, batchSize, 40, 20, 10); --> 95,4% (20 Epochen)
         //ComputationGraphConfiguration graph = ConvolutionConfigs.treeReshapesMultipleDeepLayers(selectedLabels, batchSize, 40, 20, 10) --> 95,2 (10 Epochen)
         //ComputationGraphConfiguration graph = ConvolutionConfigs.treeReshapesMultipleDeepLayers(selectedLabels, batchSize, 50, 10, 5);
-        //ComputationGraphConfiguration graph = ConvolutionConfigs.treeReshapesMultipleDeepLayers(selectedLabels, batchSize, 20, 10, 5); (20 Epochen) --> 96%
-        ComputationGraphConfiguration graph = ConvolutionConfigs.treeReshapesMultipleDeepLayers(selectedLabels, batchSize, 20, 10, 5);
+        /*ComputationGraphConfiguration graph = ConvolutionConfigs.treeReshapesMultipleDeepLayers(selectedLabels, batchSize, 20, 10, 5);*/ /*(20 Epochen) --> 96%*/
+        /*ComputationGraphConfiguration graph = ConvolutionConfigs.treeReshapesMultipleDeepLayers(selectedLabels, batchSize, 20, 20, 5); 10 Epochen --> 89%*/
+        ComputationGraphConfiguration graph = ConvolutionConfigs.twoReshapes(selectedLabels, batchSize, 40, 20);
         ComputationGraph computationGraph = new ComputationGraph(graph);
         computationGraph.init();
         computationGraph.addListeners(listeners);
@@ -81,26 +81,6 @@ public class TestComputationGraphConfigs {
         Evaluation eval = computationGraph.evaluate(testIterator);
         System.out.println(eval.stats(true, true));
     }
-
-    /* feedforward and log path to test layer outputs.
-        To test with same in each run use JsonTrialRecordReader and FrameShuffleManipulator with seed.
-        DataSet next = trainIterator.next();
-        INDArray features = next.getFeatures();
-        Map<String, INDArray> indArrays = graph.feedForward(features, false);
-        for (String s : indArrays.keySet()) {
-            System.out.println(s);
-        }
-        System.out.println("Batch 0: _________________________________");
-        System.out.println("    Inputs:");
-        System.out.println(indArrays.get("1").getRow(0));
-        System.out.println("    CNN 1:");
-        System.out.println(indArrays.get("CNN1").getRow(0));
-        System.out.println("    mergeChannels:");
-        System.out.println(indArrays.get("mergeChannels").getRow(0));
-        System.out.println("    CNN2:");
-        System.out.println(indArrays.get("CNN2").getRow(0));
-        System.out.println("    Layer 2:");
-        System.out.println(indArrays.get("Layer 2").getRow(0));*/
 
     //Current Best (5 Markers) --> 99%
     //batchsize = 20
