@@ -51,7 +51,7 @@ public class FrameDataPreprocessor extends DataPreprocessor<RecordReader> {
         return recordWriter;
     }
 
-    static File getNextFile(int amountOfSplit, String directoryPath) {
+    private static File getNextFile(int amountOfSplit, String directoryPath) {
         return new File(directoryPath + "\\" + FILE_NAME + amountOfSplit + ".txt");
     }
 }

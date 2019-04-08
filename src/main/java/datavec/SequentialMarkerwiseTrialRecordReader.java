@@ -1,5 +1,6 @@
 package datavec;
 
+import com.google.gson.JsonArray;
 import org.datavec.api.records.SequenceRecord;
 import org.datavec.api.records.metadata.RecordMetaData;
 import org.datavec.api.records.reader.SequenceRecordReader;
@@ -22,11 +23,12 @@ public class SequentialMarkerwiseTrialRecordReader extends JsonTrialRecordReader
     private int currentTrialAmountOfFrames;
     private int currentFrameIndex;
     private List<Writable> removedElement;
+    private JsonArray currentFrameData;
 
     public SequentialMarkerwiseTrialRecordReader(TrialDataManager dataManager, Set<String> markerStrings, int sequenceLength) {
         super(dataManager);
         this.markerStrings = markerStrings;
-        this.sequenceLength = sequenceLength + 1; //next element is needed to label.
+        this.sequenceLength = sequenceLength; //next element is needed to label.
         this.hasSequenceLength = true;
     }
 
@@ -45,6 +47,13 @@ public class SequentialMarkerwiseTrialRecordReader extends JsonTrialRecordReader
         initNewTrial();
     }
 
+    void initIterators(final FileSplit fileSplit) {
+        fileIterator = new TrialFileIterator(fileSplit);
+        this.currentFrameData = fileIterator.next();
+        trialDataManager.setTrialContent(currentFrameData);
+        fileContentIterator = trialDataManager.getNextTrialContent().iterator();
+    }
+
     @Override
     public List<List<Writable>> sequenceRecord() {
         List<List<Writable>> resultSequence = getNextUnlabeledSequence();
@@ -60,26 +69,41 @@ public class SequentialMarkerwiseTrialRecordReader extends JsonTrialRecordReader
             }
         }
         //last element is final label
-        this.removedElement = nextUnlabeledSequence.remove(nextUnlabeledSequence.size() - 1);
+        try {
+            this.removedElement = nextUnlabeledSequence.remove(nextUnlabeledSequence.size() - 1);
+        } catch (Exception e) {
+            System.out.println("!Hi");
+        }
     }
 
     private List<List<Writable>> getNextUnlabeledSequence() {
         int framesLeftInTrial = framesLeftInTrial();
         if (framesLeftInTrial >= sequenceLength) {
-            this.currentFrameIndex += sequenceLength - 1;
-            return getNextTrialSequence(sequenceLength);
+            this.currentFrameIndex += sequenceLength;
+            return getNextTrialSequence(sequenceLength + 1); //+1 to get label in last frame
         } else if (framesLeftInTrial > 0) {
-            return getNextTrialSequence(framesLeftInTrial);
+            this.currentFrameIndex += framesLeftInTrial;
+            return getNextTrialSequence(framesLeftInTrial + 1);
         } else if (markerStringsIterator.hasNext()) {
+            this.currentFrameIndex = 0;
             setMarkerFilter(markerStringsIterator.next());
-            return sequenceRecord();
+            trialDataManager.setTrialContent(currentFrameData); //reset to reiterate same frameJson
+            return getNextUnlabeledSequence();
         } else if (fileIterator.hasNext()) {
-            trialDataManager.setTrialContent(fileIterator.next());
+            currentFrameData = fileIterator.next();
+            trialDataManager.setTrialContent(currentFrameData);
             initNewTrial();
             initMarkerStringIterator();
-            return sequenceRecord();
+            return getNextUnlabeledSequence();
         } else
             throw new NoSuchElementException();
+    }
+
+    private int framesLeftInTrial() {
+        if (!hasSequenceLength) {
+            return sequenceLength;
+        }
+        return currentTrialAmountOfFrames - currentFrameIndex;
     }
 
     private void initMarkerStringIterator() {
@@ -123,13 +147,6 @@ public class SequentialMarkerwiseTrialRecordReader extends JsonTrialRecordReader
         if (!hasSequenceLength) {
             sequenceLength = currentTrialAmountOfFrames;
         }
-    }
-
-    private int framesLeftInTrial() {
-        if (!hasSequenceLength) {
-            return sequenceLength;
-        }
-        return currentTrialAmountOfFrames - (currentFrameIndex + sequenceLength);
     }
 
     @Override

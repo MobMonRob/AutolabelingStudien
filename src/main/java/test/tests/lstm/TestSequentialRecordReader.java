@@ -31,21 +31,12 @@ public class TestSequentialRecordReader {
         SequenceRecordReader recordReader = new SequentialMarkerwiseTrialRecordReader(dataManager, selectedLabels, sequenceLength);
         recordReader.initialize(new FileSplit(trainDirectory));
 
-        for (List<Writable> writables : recordReader.sequenceRecord()) {
-            System.out.println(writables);
-        }
-
-        recordReader.reset();
-
-        /*SequentialDataPreprocessor dataPreprocessor = new SequentialDataPreprocessor();
+        SequentialDataPreprocessor dataPreprocessor = new SequentialDataPreprocessor();
         String saveDirectory = "C:\\Users\\Nico Rinck\\Documents\\DHBW\\Studienarbeit\\Daten_Studienarbeit\\save\\lstm\\train";
         SequenceRecordReader sequenceRecordReader = dataPreprocessor.saveDataToFile(recordReader, saveDirectory);
-        for (List<Writable> writables : sequenceRecordReader.sequenceRecord()) {
-            System.out.println(writables);
-        }*/
 
-        for (int i = 0; recordReader.hasNext(); i++) {
-            System.out.println(i);
+        while (sequenceRecordReader.hasNext()) {
+            System.out.println(sequenceRecordReader.sequenceRecord());
         }
     }
 }

@@ -33,5 +33,4 @@ public class SequentialDataPreprocessor extends DataPreprocessor<SequenceRecordR
             writer.write(record);
         }
     }
-
 }

@@ -21,8 +21,8 @@ public class JsonTrialRecordReader extends BaseRecordReader {
 
     TrialDataManager trialDataManager;
     TrialFileIterator fileIterator;
-    private Iterator<ArrayList<Writable>> fileContentIterator;
     FileSplit fileSplit;
+    Iterator<ArrayList<Writable>> fileContentIterator;
 
     public JsonTrialRecordReader(TrialDataManager trialDataManager) {
         this.trialDataManager = trialDataManager;
