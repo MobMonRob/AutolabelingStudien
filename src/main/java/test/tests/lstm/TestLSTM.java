@@ -56,8 +56,10 @@ public class TestLSTM {
             recordReaderTrain = dataPreprocessor.saveDataToFile(train, saveDirectoryTrain);
             recordReaderTest = dataPreprocessor.saveDataToFile(test, saveDirectoryTest);
         }
+
+        //numPossLabels has to be greater than 1 to allow multiple labels
         SequenceRecordReaderDataSetIterator trainIterator = new SequenceRecordReaderDataSetIterator(recordReaderTrain,
-                1, 2,3,true); //numPossLabels has to be greater than 1 to allow multiple labels
+                1, 2,3,true);
         SequenceRecordReaderDataSetIterator testIterator = new SequenceRecordReaderDataSetIterator(recordReaderTest,
                 1, 2,3,true);
 
