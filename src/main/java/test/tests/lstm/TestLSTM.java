@@ -79,6 +79,7 @@ public class TestLSTM {
         multiLayerNetwork.setListeners(listeners);
 
         for (int i = 0; i < 25; i++) {
+            System.out.println("Iteration: " + (i + 1));
             multiLayerNetwork.fit(trainIterator);
             RegressionEvaluation regressionEvaluation = multiLayerNetwork.evaluateRegression(testIterator);
             System.out.println(regressionEvaluation.stats());
