@@ -17,6 +17,7 @@ import preprocess_data.builders.TrialDataTransformationBuilder;
 import preprocess_data.data_normalization.CentroidNormalization;
 import preprocess_data.labeling.FrameLabelingStrategy;
 import preprocess_data.labeling.NoLabeling;
+import test.tests.Helper;
 
 import java.io.File;
 import java.util.Arrays;
@@ -26,8 +27,8 @@ import java.util.TreeSet;
 public class TestLSTM {
 
     public static void main(String[] args) throws Exception {
-        File trainDirectory = new File("C:\\Users\\Nico Rinck\\Documents\\DHBW\\Studienarbeit\\Daten_Studienarbeit\\trainData\\train");
-        File testDirectory = new File("C:\\Users\\Nico Rinck\\Documents\\DHBW\\Studienarbeit\\Daten_Studienarbeit\\testData\\test");
+        File trainDirectory = new File("C:\\Users\\Nico\\Documents\\Studienarbeit\\Daten_Studienarbeit\\trainData\\train");
+        File testDirectory = new File("C:\\Users\\Nico\\Documents\\Studienarbeit\\Daten_Studienarbeit\\testData\\test");
         String[] markerLabels = {"C7", "CLAV", "LASI", "LELB", "LELBW", "LHUM4", "LHUMA", "LHUMP", "LHUMS", "LRAD", "LSCAP1", "LSCAP2", "LSCAP3", "LSCAP4", "LULN", "RASI", "RELB", "RELBW", "RHUM4", "RHUMA", "RHUMP", "RHUMS", "RRAD", "RSCAP1", "RSCAP2", "RSCAP3", "RSCAP4", "RULN", "SACR", "STRN", "T10", "THRX1", "THRX2", "THRX3", "THRX4"};
         TreeSet<String> selectedLabels = new TreeSet<>(Arrays.asList(markerLabels));
 
@@ -36,11 +37,11 @@ public class TestLSTM {
                 .addTransformation(TrialDataTransformationBuilder
                         .addLabelingStrategy(frameLabelingStrategy)
                         .build())
-                .withNormalization(new CentroidNormalization(-1,1));
+                .withNormalization(new CentroidNormalization(-1, 1));
 
         SequentialDataPreprocessor dataPreprocessor = new SequentialDataPreprocessor();
-        String saveDirectoryTrain = "C:\\Users\\Nico Rinck\\Documents\\DHBW\\Studienarbeit\\Daten_Studienarbeit\\save\\lstm\\train";
-        String saveDirectoryTest = "C:\\Users\\Nico Rinck\\Documents\\DHBW\\Studienarbeit\\Daten_Studienarbeit\\save\\lstm\\test";
+        String saveDirectoryTrain = "C:\\Users\\Nico\\Documents\\Studienarbeit\\Daten_Studienarbeit\\save\\lstm\\train";
+        String saveDirectoryTest = "C:\\Users\\Nico\\Documents\\Studienarbeit\\Daten_Studienarbeit\\save\\lstm\\test";
         SequenceRecordReader recordReaderTrain;
         SequenceRecordReader recordReaderTest;
         if (SequentialDataPreprocessor.directoryHasData(saveDirectoryTest)
@@ -59,14 +60,14 @@ public class TestLSTM {
 
         //numPossLabels has to be greater than 1 to allow multiple labels
         SequenceRecordReaderDataSetIterator trainIterator = new SequenceRecordReaderDataSetIterator(recordReaderTrain,
-                1, 2,3,true);
+                1, 2, 3, true);
         SequenceRecordReaderDataSetIterator testIterator = new SequenceRecordReaderDataSetIterator(recordReaderTest,
-                1, 2,3,true);
+                1, 2, 3, true);
 
         final MultiLayerConfiguration config = LSTMConfigs.simpleLSTM();
         MultiLayerNetwork multiLayerNetwork = new MultiLayerNetwork(config);
         TrainingListener[] listeners = {
-                new PerformanceListener(1,true),
+                new PerformanceListener(1, true),
         };
         /*DataSet next = trainIterator.next();
         List<INDArray> indArrays = multiLayerNetwork.feedForwardToLayer(1, next.getFeatures());
@@ -77,11 +78,14 @@ public class TestLSTM {
         System.out.println(indArrays.get(1));*/
         multiLayerNetwork.setListeners(listeners);
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 25; i++) {
             multiLayerNetwork.fit(trainIterator);
             RegressionEvaluation regressionEvaluation = multiLayerNetwork.evaluateRegression(testIterator);
             System.out.println(regressionEvaluation.stats());
         }
+
+        File file = new File("C:\\Users\\Nico\\Documents\\Studienarbeit\\Daten_Studienarbeit\\save\\lstm\\models\\model.zip");
+        Helper.saveModel(multiLayerNetwork, file);
 
         testIterator.reset();
         DataSet next = testIterator.next();

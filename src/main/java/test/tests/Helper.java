@@ -1,17 +1,29 @@
 package test.tests;
 
+import org.deeplearning4j.nn.api.Model;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
+import org.deeplearning4j.util.ModelSerializer;
 import org.nd4j.evaluation.classification.Evaluation;
 import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.dataset.api.DataSet;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Helper {
+
+    public static void saveModel(Model model, File saveDirectory) throws IOException {
+        if (saveDirectory.exists() && saveDirectory.isDirectory()) {
+            ModelSerializer.writeModel(model,saveDirectory,true);
+        }
+    }
+
+    public static Model loadModel(File modelFile) throws IOException {
+        return ModelSerializer.restoreMultiLayerNetwork(modelFile);
+    }
 
     public static void printINDArray(INDArray indArray) {
         double[] array = indArray.toDoubleVector();
