@@ -69,10 +69,9 @@ public class SequentialMarkerwiseTrialRecordReader extends JsonTrialRecordReader
             }
         }
         //last element is final label
-        try {
+        this.removedElement = null;
+        if (nextUnlabeledSequence.size() > 0) {
             this.removedElement = nextUnlabeledSequence.remove(nextUnlabeledSequence.size() - 1);
-        } catch (Exception e) {
-            System.out.println("!Hi");
         }
     }
 
@@ -80,10 +79,10 @@ public class SequentialMarkerwiseTrialRecordReader extends JsonTrialRecordReader
         int framesLeftInTrial = framesLeftInTrial();
         if (framesLeftInTrial >= sequenceLength) {
             this.currentFrameIndex += sequenceLength;
-            return getNextTrialSequence(sequenceLength + 1); //+1 to get label in last frame
+            return getNextTrialSequence(getNecessarySequenceLength()); //+1 if sequenceLength is defined
         } else if (framesLeftInTrial > 0) {
             this.currentFrameIndex += framesLeftInTrial;
-            return getNextTrialSequence(framesLeftInTrial + 1);
+            return getNextTrialSequence(framesLeftInTrial);
         } else if (markerStringsIterator.hasNext()) {
             this.currentFrameIndex = 0;
             setMarkerFilter(markerStringsIterator.next());
@@ -99,10 +98,27 @@ public class SequentialMarkerwiseTrialRecordReader extends JsonTrialRecordReader
             throw new NoSuchElementException();
     }
 
-    private int framesLeftInTrial() {
-        if (!hasSequenceLength) {
+    private List<List<Writable>> getNextTrialSequence(int sequenceLength) {
+        ArrayList<List<Writable>> resultList = new ArrayList<>();
+        int currentSequenceLength = sequenceLength;
+        if (hasSequenceLength && removedElement != null) {
+            resultList.add(removedElement);
+            currentSequenceLength--;
+        }
+        for (int length = currentSequenceLength; length > 0 && trialDataManager.hasNext(); length--) {
+            resultList.add(super.next());
+        }
+        return resultList;
+    }
+
+    private int getNecessarySequenceLength() {
+        if (hasSequenceLength) {
             return sequenceLength;
         }
+        return sequenceLength + 1;
+    }
+
+    private int framesLeftInTrial() {
         return currentTrialAmountOfFrames - currentFrameIndex;
     }
 
@@ -113,26 +129,11 @@ public class SequentialMarkerwiseTrialRecordReader extends JsonTrialRecordReader
 
     //returns true with empty records
     public boolean hasNext() {
-        return !(!sequenceLeftInTrial() && !markerStringsIterator.hasNext() && !fileIterator.hasNext());
+        return !(!super.hasNext() && !sequenceLeftInTrial() && !markerStringsIterator.hasNext() && !fileIterator.hasNext());
     }
 
     private boolean sequenceLeftInTrial() {
         return currentFrameIndex + sequenceLength < currentTrialAmountOfFrames;
-    }
-
-    private List<List<Writable>> getNextTrialSequence(int sequenceLength) {
-        ArrayList<List<Writable>> resultList = new ArrayList<>();
-        int currentSequenceLength = sequenceLength;
-        if (hasSequenceLength && removedElement != null) {
-            resultList.add(removedElement);
-            currentSequenceLength--;
-        }
-        for (int length = currentSequenceLength; length > 0; length--) {
-            if (super.hasNext()) {
-                resultList.add(super.next());
-            }
-        }
-        return resultList;
     }
 
     private void setMarkerFilter(String markerString) {
