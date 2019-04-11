@@ -15,10 +15,12 @@ import java.util.HashMap;
 
 public class Helper {
 
-    public static void saveModel(Model model, File saveDirectory) throws IOException {
-        if (saveDirectory.exists() && saveDirectory.isDirectory()) {
-            ModelSerializer.writeModel(model,saveDirectory,true);
+    public static void saveModel(Model model, String saveDirectoryPath, String modelName) throws IOException {
+        File modelSaveFile = new File(saveDirectoryPath + "\\" + modelName + "-v1.zip");
+        while (modelSaveFile.exists()) {
+            modelSaveFile = Helper.getNextPossibleFile(modelSaveFile);
         }
+        ModelSerializer.writeModel(model, modelSaveFile, true);
     }
 
     public static Model loadModel(File modelFile) throws IOException {
@@ -40,7 +42,7 @@ public class Helper {
         return new File(modelSaveFile.getParent() + ++integer + getFileExtension(modelSaveFile));
     }
 
-    public static String getFileExtension(File file) {
+    static String getFileExtension(File file) {
         String name = file.getName();
         int lastIndexOf = name.lastIndexOf(".");
         if (lastIndexOf == -1) {
