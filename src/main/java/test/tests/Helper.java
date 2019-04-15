@@ -37,9 +37,12 @@ public class Helper {
 
     public static File getNextPossibleFile(File modelSaveFile) {
         String currentPath = modelSaveFile.getPath();
+        String fileName = modelSaveFile.getName();
+
         int indexOfVersion = currentPath.indexOf("-v");
+        String modelName = fileName.substring(0,fileName.indexOf("-v"));
         int integer = Integer.valueOf(currentPath.substring(indexOfVersion + 2, currentPath.lastIndexOf(".")));
-        return new File(modelSaveFile.getParent() + ++integer + getFileExtension(modelSaveFile));
+        return new File(modelSaveFile.getParent() + "\\" + modelName + "-v" + ++integer + getFileExtension(modelSaveFile));
     }
 
     static String getFileExtension(File file) {

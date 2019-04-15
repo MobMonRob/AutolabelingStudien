@@ -60,14 +60,14 @@ public class TestLSTM {
 
         //numPossLabels has to be greater than 1 to allow multiple labels
         SequenceRecordReaderDataSetIterator trainIterator = new SequenceRecordReaderDataSetIterator(recordReaderTrain,
-                1, 2, 3, true);
+                10, 2, 3, true);
         SequenceRecordReaderDataSetIterator testIterator = new SequenceRecordReaderDataSetIterator(recordReaderTest,
-                1, 2, 3, true);
+                10, 2, 3, true);
 
-        final MultiLayerConfiguration config = LSTMConfigs.simpleLSTM();
+        final MultiLayerConfiguration config = LSTMConfigs.simpleLSTMTruncated();
         MultiLayerNetwork multiLayerNetwork = new MultiLayerNetwork(config);
         TrainingListener[] listeners = {
-                new PerformanceListener(1, true),
+                new PerformanceListener(1000, true),
         };
         /*DataSet next = trainIterator.next();
         List<INDArray> indArrays = multiLayerNetwork.feedForwardToLayer(1, next.getFeatures());
@@ -78,15 +78,16 @@ public class TestLSTM {
         System.out.println(indArrays.get(1));*/
         multiLayerNetwork.setListeners(listeners);
 
-        for (int i = 0; i < 25; i++) {
+        for (int i = 0; i < 10; i++) {
             System.out.println("Iteration: " + (i + 1));
             multiLayerNetwork.fit(trainIterator);
             RegressionEvaluation regressionEvaluation = multiLayerNetwork.evaluateRegression(testIterator);
             System.out.println(regressionEvaluation.stats());
         }
 
-        File file = new File("C:\\Users\\Nico\\Documents\\Studienarbeit\\Daten_Studienarbeit\\save\\lstm\\models\\model.zip");
-        Helper.saveModel(multiLayerNetwork, file);
+        String saveDirectory = "C:\\Users\\Nico\\Documents\\Studienarbeit\\Daten_Studienarbeit\\save\\lstm\\models";
+        Helper.saveModel(multiLayerNetwork, saveDirectory, "lstm");
+
 
         testIterator.reset();
         DataSet next = testIterator.next();
