@@ -9,9 +9,16 @@ import java.util.Random;
 public class RandomFrameRotationManipulator implements FrameManipulationStrategy {
 
     private final int amountOfRotations;
+    private final double[] range; //user-defined range for angles
 
     public RandomFrameRotationManipulator(int amountOfRotations) {
         this.amountOfRotations = amountOfRotations;
+        this.range = new double[]{0, 360};
+    }
+
+    public RandomFrameRotationManipulator(int amountOfRotations, double rangeMin, double rangeMax) {
+        this.amountOfRotations = amountOfRotations;
+        this.range = new double[]{rangeMin, rangeMax};
     }
 
     @Override
@@ -30,6 +37,6 @@ public class RandomFrameRotationManipulator implements FrameManipulationStrategy
     }
 
     private double getRandomAngle(Random random) {
-        return random.nextDouble() * 360; //random between 0 inclusive and 360 exclusive
+        return random.nextDouble() * (range[1] - range[0]) + range[0]; //random between 0 inclusive and 360 exclusive
     }
 }
