@@ -61,38 +61,4 @@ public class TrialDataTransformation {
         return "Manipulation: " + manipulators.toString() +
                 "\nLabeling: " + converter.getFrameLabelingStrategy().toString();
     }
-
-    public static void main(String[] args) {
-        RandomFrameRotationManipulator rotationManipulator = new RandomFrameRotationManipulator(5,-5,5);
-        FrameShuffleManipulator shuffleManipulator = new FrameShuffleManipulator(3);
-        ArrayList<FrameManipulationStrategy> manipulators = new ArrayList<>();
-        manipulators.add(rotationManipulator);
-        manipulators.add(shuffleManipulator);
-
-        Marker marker1 = new Marker("1", 1, 1, 1);
-        Marker marker2 = new Marker("2", 2, 2, 1);
-        Marker marker3 = new Marker("3", 3, 2, 1);
-        Marker marker4 = new Marker("4", 4, 1, 1);
-
-        ArrayList<Marker> markers = new ArrayList<>();
-        markers.add(marker1);
-        markers.add(marker2);
-        markers.add(marker3);
-        markers.add(marker4);
-
-        Frame frame = new Frame(markers);
-
-        NoLabeling noLabeling = new NoLabeling();
-        TrialDataTransformation trialDataTransformation = new TrialDataTransformation(noLabeling, manipulators);
-
-        ArrayList<Frame> frames = trialDataTransformation.manipulateFrame(frame);
-        int i = 1;
-        for (Frame frame1 : frames) {
-            System.out.println(i++);
-            for (Marker marker : frame1.getMarkers()) {
-                System.out.println(marker.toString());
-            }
-        }
-
-    }
 }

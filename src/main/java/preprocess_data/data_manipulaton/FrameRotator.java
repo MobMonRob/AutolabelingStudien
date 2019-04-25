@@ -1,6 +1,5 @@
 package preprocess_data.data_manipulaton;
 
-import org.yaml.snakeyaml.error.Mark;
 import preprocess_data.data_model.Frame;
 import preprocess_data.data_model.Marker;
 
@@ -18,8 +17,8 @@ public class FrameRotator {
     }
 
     private Marker rotateMarker(final Marker marker, double angle) {
-        double newX = marker.getX() * Math.cos(angle) + marker.getY() * Math.sin(angle);
-        double newY = -marker.getY() * Math.sin(angle) + marker.getX() * Math.cos(angle);
+        double newX = marker.getX() * Math.cos(Math.toRadians(angle)) - marker.getY() * Math.sin(Math.toRadians(angle));
+        double newY = marker.getX() * Math.sin(Math.toRadians(angle)) + marker.getY() * Math.cos(Math.toRadians(angle));
 
         return new Marker(marker.getLabel(), newX, newY, marker.getZ());
     }

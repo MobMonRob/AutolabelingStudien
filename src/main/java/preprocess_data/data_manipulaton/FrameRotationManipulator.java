@@ -19,7 +19,7 @@ public class FrameRotationManipulator implements FrameManipulationStrategy {
     public ArrayList<Frame> manipulateFrame(Frame frame) {
         final ArrayList<Frame> resultList = new ArrayList<>();
         for (double angle : angles) {
-            resultList.add(frameRotator.rotateFrame(frame,angle));
+            resultList.add(frameRotator.rotateFrame(frame, angle));
         }
         return resultList;
     }
