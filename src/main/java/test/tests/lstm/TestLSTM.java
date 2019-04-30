@@ -37,7 +37,7 @@ public class TestLSTM {
                 .addTransformation(TrialDataTransformationBuilder
                         .addLabelingStrategy(frameLabelingStrategy)
                         .build())
-                .withNormalization(new CentroidNormalization(-1, 1));
+                .withNormalization(new CentroidNormalization(-10, 10));
 
         SequentialDataPreprocessor dataPreprocessor = new SequentialDataPreprocessor();
         String saveDirectoryTrain = "C:\\Users\\Nico Rinck\\Documents\\DHBW\\Studienarbeit\\Daten_Studienarbeit\\save\\lstm\\train";
@@ -49,8 +49,8 @@ public class TestLSTM {
             recordReaderTrain = dataPreprocessor.getReader(saveDirectoryTrain);
             recordReaderTest = dataPreprocessor.getReader(saveDirectoryTest);
         } else {
-            SequenceRecordReader train = new SequentialMarkerwiseTrialRecordReader(dataManager.build(), selectedLabels);
-            SequenceRecordReader test = new SequentialMarkerwiseTrialRecordReader(dataManager.build(), selectedLabels);
+            SequenceRecordReader train = new SequentialMarkerwiseTrialRecordReader(dataManager.build(), selectedLabels, 30);
+            SequenceRecordReader test = new SequentialMarkerwiseTrialRecordReader(dataManager.build(), selectedLabels, 30);
             train.initialize(new FileSplit(trainDirectory));
             test.initialize(new FileSplit(testDirectory));
 

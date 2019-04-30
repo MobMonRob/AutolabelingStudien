@@ -46,8 +46,6 @@ public class LSTMConfigs {
                         .build())
                 .layer(2, new RnnOutputLayer.Builder(LossFunctions.LossFunction.MSE)
                         .activation(Activation.IDENTITY).weightInit(WeightInit.XAVIER).nIn(15).nOut(3).build())
-                .backpropType(BackpropType.TruncatedBPTT)
-                .tBPTTLength(50)
                 .build();
     }
 }

@@ -11,22 +11,34 @@ import preprocess_data.labeling.FrameLabelingStrategy;
 import preprocess_data.labeling.NoLabeling;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class SaveFrameData {
 
     public static void main(String[] args) throws Exception {
         File rootData = new File("C:\\Users\\Nico Rinck\\Desktop\\oneProband.json");
         /*File rootData = new File("C:\\Users\\Nico Rinck\\Documents\\DHBW\\Studienarbeit\\Daten_Studienarbeit\\trainData\\train\\02_JI_O1_S1_Abd.json");*/
-        String[] orderedLabels2 = {"RRAD", "RULN", "RASI", "LASI", "LRAD", "LULN", "T10",
-                "RELB", "LELB", "RHUM4", "LHUM4", "RSCAP2", "LSCAP2", "C7", "THRX1", "THRX3", "SACR", "STRN"
+        String[] orderedLabels2 = {
+                "RASI","SACR", "LASI",
+                       "STRN",
+                       "THRX3",
+                       "THRX1",
+                        "C7", //höchster Punkt (Mittel der Armlinien)
+                "RSCAP2",
+                "RHUM4",
+                "RELB",
+                "RULN",
+                              "LSCAP2",
+                              "LHUM4",
+                              "LELB",
+                              "LULN",
+
         };
-        Set<String> stringSets = new HashSet<>(Arrays.asList(orderedLabels2));
+        Set<String> stringSets = new LinkedHashSet<>(Arrays.asList(orderedLabels2));
+        stringSets.forEach(System.out::println);
 
         FrameLabelingStrategy frameLabelingStrategy = new NoLabeling();
-        double[] rotationAngles = {22.5, 45.0, 90.0, 135};
+        double[] rotationAngles = {22.5};
         TrialDataManagerBuilder dataManager = TrialDataManagerBuilder
                 .addTransformation(TrialDataTransformationBuilder
                         .addLabelingStrategy(frameLabelingStrategy)
