@@ -32,6 +32,6 @@ public class Marker {
 
     @Override
     public String toString() {
-        return "label: " + label + " x: " + x + " y: " + y + " z: " + z;
+        return "label: " + label + ", x: " + x + ", y: " + y + ", z: " + z;
     }
 }

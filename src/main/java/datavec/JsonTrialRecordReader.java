@@ -1,6 +1,5 @@
 package datavec;
 
-import com.google.gson.JsonArray;
 import org.datavec.api.conf.Configuration;
 import org.datavec.api.records.Record;
 import org.datavec.api.records.metadata.RecordMetaData;
@@ -9,7 +8,6 @@ import org.datavec.api.split.FileSplit;
 import org.datavec.api.split.InputSplit;
 import org.datavec.api.writable.Writable;
 import preprocess_data.TrialDataManager;
-import preprocess_data.TrialFileIterator;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -21,10 +19,10 @@ import java.util.NoSuchElementException;
 
 public class JsonTrialRecordReader extends BaseRecordReader {
 
-    private final TrialDataManager trialDataManager;
-    private Iterator<JsonArray> fileIterator;
-    private Iterator<ArrayList<Writable>> fileContentIterator;
-    private FileSplit fileSplit;
+    TrialDataManager trialDataManager;
+    TrialFileIterator fileIterator;
+    FileSplit fileSplit;
+    Iterator<ArrayList<Writable>> fileContentIterator;
 
     public JsonTrialRecordReader(TrialDataManager trialDataManager) {
         this.trialDataManager = trialDataManager;
@@ -39,7 +37,7 @@ public class JsonTrialRecordReader extends BaseRecordReader {
         initIterators(fileSplit);
     }
 
-    private void initIterators(final FileSplit fileSplit) {
+    void initIterators(final FileSplit fileSplit) {
         fileIterator = new TrialFileIterator(fileSplit);
         trialDataManager.setTrialContent(fileIterator.next());
         fileContentIterator = trialDataManager.getNextTrialContent().iterator();

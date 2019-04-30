@@ -17,14 +17,13 @@ public class TrialDataManager {
     private final TrialDataTransformation dataTransformer;
     private final JsonToTrialParser jsonToTrialParser = new JsonToTrialParser();
     private TrialNormalizationStrategy normalizationStrategy;
-    private final Set<String> acceptedMarkers;
+    private int currentAmountOfFrames;
 
     public TrialDataManager(TrialDataTransformation dataTransformer, TrialNormalizationStrategy normalizationStrategy,
                             Set<String> acceptedMarkers) {
         this.dataTransformer = dataTransformer;
         this.normalizationStrategy = normalizationStrategy;
-        this.acceptedMarkers = acceptedMarkers;
-        jsonToTrialParser.addFilter(acceptedMarkers);
+        jsonToTrialParser.setFilter(acceptedMarkers);
     }
 
     public TrialDataManager(TrialDataTransformation dataTransformer) {
@@ -35,6 +34,8 @@ public class TrialDataManager {
         if (normalizationStrategy != null) {
             normalizationStrategy = normalizationStrategy.getNewInstance();
         }
+        this.currentAmountOfFrames = trialData.size();
+        /*System.out.println("amount of frames: " + currentAmountOfFrames);*/
         getFramesFromJson(trialData);
     }
 
@@ -65,6 +66,14 @@ public class TrialDataManager {
 
     public TrialDataTransformation getDataTransformer() {
         return dataTransformer;
+    }
+
+    public int getAmountOfFrames() {
+        return this.currentAmountOfFrames;
+    }
+
+    public void setNewFilter(Set<String> filterMarkers) {
+        jsonToTrialParser.setFilter(filterMarkers);
     }
 
     public String getInfoString() {

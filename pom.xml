@@ -3,11 +3,9 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>nr.autolabeling</groupId>
     <artifactId>autolabeling</artifactId>
     <version>1.0-SNAPSHOT</version>
-
     <dependencies>
         <dependency>
             <groupId>org.deeplearning4j</groupId>
@@ -19,6 +17,18 @@
             <artifactId>nd4j-native-platform</artifactId>
             <version>1.0.0-beta3</version>
         </dependency>
+        <!-- too use cuda remove nd4j-native-platform dependency and uncomment the following: -->
+        <!-- <dependency>
+             <groupId>org.deeplearning4j</groupId>
+             <artifactId>deeplearning4j-cuda-10.0</artifactId>
+             <version>1.0.0-beta3</version>
+         </dependency>
+         <dependency>
+             <groupId>org.nd4j</groupId>
+             <artifactId>nd4j-cuda-10.0-platform</artifactId>
+             <version>1.0.0-beta3</version>
+         </dependency>-->
+        <!--...-->
         <dependency>
             <groupId>org.datavec</groupId>
             <artifactId>datavec-api</artifactId>
@@ -30,9 +40,9 @@
             <version>1.6.2</version>
         </dependency>
         <dependency>
-             <groupId>org.deeplearning4j</groupId>
-             <artifactId>deeplearning4j-ui_2.10</artifactId>
-             <version>1.0.0-beta3</version>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-ui_2.10</artifactId>
+            <version>1.0.0-beta3</version>
         </dependency>
     </dependencies>
 </project>

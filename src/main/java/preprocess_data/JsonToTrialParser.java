@@ -48,7 +48,7 @@ public class JsonToTrialParser {
                 frameJson.get(markerLabel + "_z").getAsDouble());
     }
 
-    public void addFilter(Set<String> acceptedMarkers) {
+    public void setFilter(Set<String> acceptedMarkers) {
         this.markerLabels = acceptedMarkers;
     }
 }
