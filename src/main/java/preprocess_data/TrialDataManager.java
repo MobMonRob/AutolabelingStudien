@@ -35,7 +35,6 @@ public class TrialDataManager {
             normalizationStrategy = normalizationStrategy.getNewInstance();
         }
         this.currentAmountOfFrames = trialData.size();
-        /*System.out.println("amount of frames: " + currentAmountOfFrames);*/
         getFramesFromJson(trialData);
     }
 
@@ -55,6 +54,8 @@ public class TrialDataManager {
         return dataTransformer.transformFrameData(frame);
     }
 
+    /*Die JSON-Daten des Trails werden eingelesen. Alle Frames eines Trials werden in Frame-Objekte umgewandelt und in einer
+    * Array-Liste gespeichert. Aus der Liste wird ein Iterator erzeugt*/
     private void getFramesFromJson(JsonArray trialData) {
         final ArrayList<Frame> currentFrames = new ArrayList<>();
         for (JsonElement trialDatum : trialData) {
