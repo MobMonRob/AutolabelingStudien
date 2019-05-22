@@ -27,21 +27,26 @@ import java.util.TreeSet;
 public class TestLSTM {
 
     public static void main(String[] args) throws Exception {
-        File trainDirectory = new File("C:\\Users\\Nico Rinck\\Documents\\DHBW\\Studienarbeit\\Daten_Studienarbeit\\trainData\\train\\01_SS_O1_S1_Abd.json");
-        File testDirectory = new File("C:\\Users\\Nico Rinck\\Documents\\DHBW\\Studienarbeit\\Daten_Studienarbeit\\testData\\test\\01_SS_O2_S2_Abd.json");
+        File trainDirectory = new File("C:\\Users\\nico.rinck\\Desktop\\Daten_Studienarbeit\\ABD_train");
+        File testDirectory = new File("C:\\Users\\nico.rinck\\Desktop\\Daten_Studienarbeit\\ABD_test");
         String[] markerLabels = {"C7", "CLAV", "LASI", "LELB", "LELBW", "LHUM4", "LHUMA", "LHUMP", "LHUMS", "LRAD", "LSCAP1", "LSCAP2", "LSCAP3", "LSCAP4", "LULN", "RASI", "RELB", "RELBW", "RHUM4", "RHUMA", "RHUMP", "RHUMS", "RRAD", "RSCAP1", "RSCAP2", "RSCAP3", "RSCAP4", "RULN", "SACR", "STRN", "T10", "THRX1", "THRX2", "THRX3", "THRX4"};
-        TreeSet<String> selectedLabels = new TreeSet<>(Arrays.asList(markerLabels));
+        TreeSet<String> selectedLabels = new TreeSet<>();
+        selectedLabels.add(markerLabels[0]);
+        selectedLabels.add(markerLabels[1]);
+        selectedLabels.add(markerLabels[2]);
+        selectedLabels.add(markerLabels[3]);
+        selectedLabels.add(markerLabels[4]);
 
         FrameLabelingStrategy frameLabelingStrategy = new NoLabeling();
         TrialDataManagerBuilder dataManager = TrialDataManagerBuilder
                 .addTransformation(TrialDataTransformationBuilder
                         .addLabelingStrategy(frameLabelingStrategy)
                         .build())
-                .withNormalization(new CentroidNormalization(-10, 10));
+                .withNormalization(new CentroidNormalization(-1, 1));
 
         SequentialDataPreprocessor dataPreprocessor = new SequentialDataPreprocessor();
-        String saveDirectoryTrain = "C:\\Users\\Nico Rinck\\Documents\\DHBW\\Studienarbeit\\Daten_Studienarbeit\\save\\lstm\\train";
-        String saveDirectoryTest = "C:\\Users\\Nico Rinck\\Documents\\DHBW\\Studienarbeit\\Daten_Studienarbeit\\save\\lstm\\test";
+        String saveDirectoryTrain = "C:\\Users\\nico.rinck\\Desktop\\Daten_Studienarbeit\\save\\train";
+        String saveDirectoryTest = "C:\\Users\\nico.rinck\\Desktop\\Daten_Studienarbeit\\save\\test";
         SequenceRecordReader recordReaderTrain;
         SequenceRecordReader recordReaderTest;
         if (SequentialDataPreprocessor.directoryHasData(saveDirectoryTest)
@@ -49,8 +54,8 @@ public class TestLSTM {
             recordReaderTrain = dataPreprocessor.getReader(saveDirectoryTrain);
             recordReaderTest = dataPreprocessor.getReader(saveDirectoryTest);
         } else {
-            SequenceRecordReader train = new SequentialMarkerwiseTrialRecordReader(dataManager.build(), selectedLabels, 30);
-            SequenceRecordReader test = new SequentialMarkerwiseTrialRecordReader(dataManager.build(), selectedLabels, 30);
+            SequenceRecordReader train = new SequentialMarkerwiseTrialRecordReader(dataManager.build(), selectedLabels);
+            SequenceRecordReader test = new SequentialMarkerwiseTrialRecordReader(dataManager.build(), selectedLabels);
             train.initialize(new FileSplit(trainDirectory));
             test.initialize(new FileSplit(testDirectory));
 
@@ -85,7 +90,7 @@ public class TestLSTM {
             System.out.println(regressionEvaluation.stats());
         }
 
-        String saveDirectory = "C:\\Users\\Nico Rinck\\Documents\\DHBW\\Studienarbeit\\Daten_Studienarbeit\\save\\models";
-        Helper.saveModel(multiLayerNetwork, saveDirectory,"lstm");
+        /*String saveDirectory = "C:\\Users\\Nico Rinck\\Documents\\DHBW\\Studienarbeit\\Daten_Studienarbeit\\save\\models";
+        Helper.saveModel(multiLayerNetwork, saveDirectory,"lstm");*/
     }
 }
