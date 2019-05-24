@@ -10,9 +10,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-//To use this labeling strategy effectively, the frames have to be reordered.
-//--> Always use in Combination with FrameReorderingManipulator
-//If not frame will be labeled with only "1" or only "0". ("1" -> labels == frame.markers, "0" -> labels != frame.markers)
+/*
+Features: Distanz jedes Markers zu jedem anderen
+Label: 1 --> Reihenfolge entspricht der vorgegebenen (labels), 0 --> Reihenfolge ist vertauscht
+*/
 public class DistanceToMarkerLabeling implements FrameLabelingStrategy {
 
     private final String[] labels;
@@ -20,6 +21,9 @@ public class DistanceToMarkerLabeling implements FrameLabelingStrategy {
     private int count0 = 0;
     private final ArrayList<Writable> resultList = new ArrayList<>();
 
+    //To use this labeling strategy effectively, the frames have to be reordered.
+    //--> Always use in Combination with FrameReorderingManipulator
+    //If not frame will be labeled with only "1" or only "0". ("1" -> labels == frame.markers, "0" -> labels != frame.markers)
     public DistanceToMarkerLabeling(String[] labels) {
         this.labels = labels;
     }

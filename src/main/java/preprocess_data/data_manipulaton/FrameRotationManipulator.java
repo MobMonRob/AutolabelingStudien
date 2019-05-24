@@ -5,7 +5,11 @@ import preprocess_data.data_model.Marker;
 
 import java.util.ArrayList;
 
-//centroid normalization has to be applied first
+/*
+Eingabeframe wird um alle angegebenen Winkel rotiert. (Data Augmentation)
+
+Hinweis: Centroid-Normalization muss zuerst angewendet werden.
+*/
 public class FrameRotationManipulator implements FrameManipulationStrategy {
 
     private final double[] angles; //length > 1 --> returns multiple frames

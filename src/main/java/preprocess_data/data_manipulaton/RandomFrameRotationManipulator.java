@@ -1,11 +1,7 @@
 package preprocess_data.data_manipulaton;
 
-import preprocess_data.TrialDataTransformation;
 import preprocess_data.data_model.Frame;
-import preprocess_data.data_model.Marker;
-import preprocess_data.labeling.NoLabeling;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -20,6 +16,7 @@ public class RandomFrameRotationManipulator implements FrameManipulationStrategy
         this.range = new double[]{0, 360};
     }
 
+    //Angabe einer Range, indem die zufälligen Winkel liegen sollen.
     public RandomFrameRotationManipulator(int amountOfRotations, double rangeMin, double rangeMax) {
         this.amountOfRotations = amountOfRotations;
         this.range = new double[]{rangeMin, rangeMax};

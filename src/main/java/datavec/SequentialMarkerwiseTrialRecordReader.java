@@ -17,6 +17,7 @@ import java.util.*;
 /*
 RecordReader zum Erstellen von sequentiellen Datensätzen. Die Länge der Sequenz bei der Initialisierung über das
 sequenceLength-Attribut festgelegt werden.
+Die Konfiguration der Vorverarbeitung wird durch den bei der Initialisierung übergebenen TrialDataManager möglich.
 
 Durch diesen RecordReader werden die Daten jedes Markers separat ausgegeben. Das bedeutet, dass einzelne Markerbahnen
 zurückgegeben werden. Das Label jedes Zeitschritts ist immer die nächste Position des Markers.

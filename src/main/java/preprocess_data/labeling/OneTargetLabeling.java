@@ -9,11 +9,18 @@ import preprocess_data.data_model.Marker;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+Features: x,y,z Koordinatenwerte
+Labels: Position eines bestimmten Markers
+
+targetLabel: Marker auf den das neuronale Netz trainiert wird (Label = Position des Markers in den Eingabedaten)
+*/
 public class OneTargetLabeling implements FrameLabelingStrategy {
 
     private final String targetLabel;
     private final int amountOfLabels;
 
+    //amountOfLabels: Wichtig für getLabels()
     public OneTargetLabeling(String targetLabel, int amountOfLabels) {
         this.targetLabel = targetLabel;
         this.amountOfLabels = amountOfLabels;

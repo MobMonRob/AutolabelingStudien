@@ -14,7 +14,7 @@ import java.util.NoSuchElementException;
 Der TrialFileIterator iteriert über die JSON-Dateien der Rohdaten und liefert das Array der Frames in einer
 Datei zurück.
 
-Optimierungsmöglichkeit im Design:
+Optimierungsmöglichkeit im Design der Klasse:
 In dieser Klasse wird ein fest definiertes Format der JSON-Dateien erzwungen. (trial > frames > [frame1, frame2....]).
 Durch eine Abstraktion des Formats hätte diese Klasse flexibler gestaltet werden können, sodass auch andere Formate
 unterstützt werden.

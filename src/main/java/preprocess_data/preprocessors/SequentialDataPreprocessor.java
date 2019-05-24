@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+//Vorverarbeitungsprozess für SequenceRecordReader. Die Daten werden im CSV-Format persistiert
 public class SequentialDataPreprocessor extends DataPreprocessor<SequenceRecordReader> {
 
     @Override

@@ -9,6 +9,7 @@ import org.datavec.api.split.partition.NumberOfRecordsPartitioner;
 import java.io.File;
 import java.io.IOException;
 
+//Vorverarbeitungsprozess für klassische RecordReader. Die Daten werden im CSV-Format persistiert
 public class FrameDataPreprocessor extends DataPreprocessor<RecordReader> {
 
     private final int splitIndex;
