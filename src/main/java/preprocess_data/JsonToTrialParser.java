@@ -12,7 +12,18 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class JsonToTrialParser {
+/*
+Diese Klasse wandelt das JSON-Array der Rohdaten in Java-Objekte um.
+
+Besonderheiten:
+- Durch die Methode setFilter() kann ein Filter festgelegt werden. Dadurch werden nur noch bestimmte Marker eingelesen.
+- Der Methode getFrameFromJson kann eine Normalisierungsstrategie übergeben werden. Die Strategie kann sich dadurch
+  Informationen besorgen, die bei der späteren Normalisierung benötigt werden. (Beispiel: Aufaddieren aller Punkte zur
+  späteren Berechnung des Schwerpunkts).
+  Grund für dieses Design ist die Performance-Optimierung. Dadurch wird für die Normalisierung nur eine Schleife
+  benötigt.
+*/
+class JsonToTrialParser {
 
     private Set<String> markerLabels;
 
@@ -33,7 +44,7 @@ public class JsonToTrialParser {
     }
 
     private Set<String> getMarkerLabels(@NotNull JsonObject sampleObject) {
-        final Set<String> labels = new TreeSet<String>();
+        final Set<String> labels = new TreeSet<>();
         for (Map.Entry<String, JsonElement> jsonPropertyEntry : sampleObject.entrySet()) {
             int indexOfSeparator = jsonPropertyEntry.getKey().indexOf("_");
             labels.add(jsonPropertyEntry.getKey().substring(0, indexOfSeparator));
@@ -48,7 +59,7 @@ public class JsonToTrialParser {
                 frameJson.get(markerLabel + "_z").getAsDouble());
     }
 
-    public void setFilter(Set<String> acceptedMarkers) {
+    void setFilter(Set<String> acceptedMarkers) {
         this.markerLabels = acceptedMarkers;
     }
 }

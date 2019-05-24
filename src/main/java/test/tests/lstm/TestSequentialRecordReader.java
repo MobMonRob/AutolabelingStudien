@@ -3,8 +3,7 @@ package test.tests.lstm;
 import datavec.SequentialMarkerwiseTrialRecordReader;
 import org.datavec.api.records.reader.SequenceRecordReader;
 import org.datavec.api.split.FileSplit;
-import org.datavec.api.writable.Writable;
-import preprocess_data.SequentialDataPreprocessor;
+import preprocess_data.preprocessors.SequentialDataPreprocessor;
 import preprocess_data.TrialDataManager;
 import preprocess_data.builders.TrialDataManagerBuilder;
 import preprocess_data.builders.TrialDataTransformationBuilder;
@@ -13,7 +12,6 @@ import preprocess_data.labeling.NoLabeling;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.List;
 import java.util.TreeSet;
 
 public class TestSequentialRecordReader {

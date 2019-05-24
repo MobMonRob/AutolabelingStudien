@@ -10,10 +10,19 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 
-//manages json-parsing, normalization and transformation of trial-data
+/*
+Zentrale Klasse für den Vorverarbeitungsprozess, die in den RecordReadern verwendet wird.
 
-/*Eine bessere Design-Entscheidung wäre an dieser Stelle eine Schnittstelle,
- sodass das JSON-Format flexibel festgelegt werden kann */
+Die Verantwortlichkeiten der Klasse wurden verteilt:
+- TrialDataTransformation --> definiert, wie die Daten eines Frames in Writables umgewandelt werden
+- JsonToTrialParser --> Umwandlung der Json-Daten in Java-Objekte
+- TrialNormalizationStrategie --> Strategie zur Normalisierung der Daten
+
+Zur Konfiguration des Vorverarbeitungsprozesses kann die Strategie zur Normalisierung ausgetauscht werden. Zudem kann
+die TrialDataTransformation konfiguriert werden.
+
+Hinweis: zum Erstellen der Klasse gibt es einen Builder (Empfohlen!)
+*/
 public class TrialDataManager {
 
     private Iterator<Frame> frameIterator;
@@ -33,6 +42,7 @@ public class TrialDataManager {
         this(dataTransformer, null, null);
     }
 
+    //Methode, die der RecordReader aufruft, um ein JSON-Array mit Frames für den Vorverarbeitungsprozess zu setzen.
     public void setTrialContent(JsonArray trialData) {
         if (normalizationStrategy != null) {
             normalizationStrategy = normalizationStrategy.getNewInstance();
@@ -41,6 +51,10 @@ public class TrialDataManager {
         getFramesFromJson(trialData);
     }
 
+    /*
+    Methode um einen Frame an den RecordReader zurückzugeben. (Falls die Daten bei der Transformation vermehrt werden,
+    gibt diese Methode mehrere Frames zurück)
+    */
     public ArrayList<ArrayList<Writable>> getNextTrialContent() {
         final Frame currentFrame = frameIterator.next();
         return new ArrayList<>(transformFrameToWritable(currentFrame));
@@ -50,6 +64,7 @@ public class TrialDataManager {
         return frameIterator.hasNext();
     }
 
+    //Umwandlung der Frame-Daten in Writables
     private ArrayList<ArrayList<Writable>> transformFrameToWritable(Frame frame) {
         if (normalizationStrategy != null) {
             return dataTransformer.transformFrameData(normalizationStrategy.normalizeFrame(frame));
@@ -57,8 +72,10 @@ public class TrialDataManager {
         return dataTransformer.transformFrameData(frame);
     }
 
-    /*Die JSON-Daten des Trails werden eingelesen. Alle Frames eines Trials werden in Frame-Objekte umgewandelt und in einer
-     * Array-Liste gespeichert. Aus der Liste wird ein Iterator erzeugt*/
+    /*
+    Die JSON-Daten des Trails werden eingelesen. Alle Frames eines Trials werden in Frame-Objekte umgewandelt und in einer
+    Array-Liste gespeichert. Aus der Liste wird ein Iterator erzeugt.
+    */
     private void getFramesFromJson(JsonArray trialData) {
         final ArrayList<Frame> currentFrames = new ArrayList<>();
         for (JsonElement trialDatum : trialData) {

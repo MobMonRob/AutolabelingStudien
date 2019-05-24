@@ -1,12 +1,9 @@
-package preprocess_data;
+package preprocess_data.preprocessors;
 
 import org.datavec.api.records.reader.RecordReader;
-import org.datavec.api.records.writer.impl.csv.CSVRecordWriter;
 
 import java.io.File;
 import java.io.IOException;
-
-import static preprocess_data.SaveDirectoryManager.initDirectory;
 
 public abstract class DataPreprocessor<T extends RecordReader> {
 

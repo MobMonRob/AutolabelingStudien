@@ -2,7 +2,7 @@ package test.tests;
 
 import datavec.JsonTrialRecordReader;
 import org.datavec.api.split.FileSplit;
-import preprocess_data.FrameDataPreprocessor;
+import preprocess_data.preprocessors.FrameDataPreprocessor;
 import preprocess_data.builders.TrialDataManagerBuilder;
 import preprocess_data.builders.TrialDataTransformationBuilder;
 import preprocess_data.data_manipulaton.FrameRotationManipulator;

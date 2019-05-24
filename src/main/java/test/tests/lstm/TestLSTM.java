@@ -11,16 +11,14 @@ import org.deeplearning4j.optimize.listeners.PerformanceListener;
 import org.nd4j.evaluation.regression.RegressionEvaluation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
-import preprocess_data.SequentialDataPreprocessor;
+import preprocess_data.preprocessors.SequentialDataPreprocessor;
 import preprocess_data.builders.TrialDataManagerBuilder;
 import preprocess_data.builders.TrialDataTransformationBuilder;
 import preprocess_data.data_normalization.CentroidNormalization;
 import preprocess_data.labeling.FrameLabelingStrategy;
 import preprocess_data.labeling.NoLabeling;
-import test.tests.Helper;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 import java.util.TreeSet;
 

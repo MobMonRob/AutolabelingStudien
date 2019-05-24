@@ -1,4 +1,4 @@
-package preprocess_data;
+package preprocess_data.preprocessors;
 
 import org.datavec.api.records.reader.RecordReader;
 import org.datavec.api.records.reader.impl.csv.CSVRecordReader;

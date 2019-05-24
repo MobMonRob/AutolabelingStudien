@@ -1,4 +1,4 @@
-package preprocess_data;
+package preprocess_data.preprocessors;
 
 import java.io.File;
 
