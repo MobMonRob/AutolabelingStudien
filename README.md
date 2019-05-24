@@ -13,6 +13,11 @@ Das Projekt wird mit der Java-Bibliothek __DL4J__ (Deep Learning for Java) umges
 ###Projektstruktur
 
 + __src/main/java__
-    + __data_generation &rarr;__ *Enhält Klassen zum Generieren von eigenen Markerdaten. Bei der weiteren Verwendung des Repositories kann dieser Orner ignoriert werden. (kaum dokumentiert!)*
+    + __data_generation &rarr;__ *Enhält Klassen zum Generieren von eigenen Markerdaten. Bei der weiteren Verwendung des Repositories kann dieser Orner ignoriert werden. (kurze Anleitung in der Testklasse)*
     + __datavec &rarr;__ *Enhält Implementierungen der Schnittstellen von Datavec*
-        + __JsonTrialRecordReader &rarr;__ *RecordReader, der die Daten der Trial*
+        + __JsonTrialRecordReader &rarr;__ *RecordReader, der die Daten der eines Trials im JSON-Format einliest. Jeder Record repräsentiert einen Frame eines Trials*
+        + __RandomizedRecordReader &rarr;__ *Erbt von JSONTrialRecordReader. Mischt die Reihenfolge der Frames vor der Ausgabe. Dadurch konnten bessere Ergebnisse erzielt werden.*
+        + __SequentialMarkerwiseTrialRecordReader &rarr;__ *Ausgabe einer Sequenz von Markerpositionen zur Verwendung in einem rekurrenten neuronalen Netz.*
+        + __TrialFileIterator &rarr;__ *Helperklasse, die in den Implementierungen der RecordReader zum Iterieren über die Dateien mit Trainingsdaten verwendet wird.*
+        
+        

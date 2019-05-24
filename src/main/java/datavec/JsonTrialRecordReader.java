@@ -17,10 +17,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+/*
+RecordReader, der die Daten eines Trials aus einem fest definierten JSON-Format einließt. Diese Format wird im
+JsonToTrialParser definiert, der Teil des TrialDataManagers ist.
+
+Die Ausgabe des RecordReaders sind die Daten eines einzelnen Frames, die in Writables konvertiert wurden.
+*/
 public class JsonTrialRecordReader extends BaseRecordReader {
 
-    TrialDataManager trialDataManager;
-    TrialFileIterator fileIterator;
+    TrialDataManager trialDataManager; //Regelt den kompletten Vorverarbeitungsprozess
+    TrialFileIterator fileIterator; //Iteriert über die Dateien des FileSplits
     FileSplit fileSplit;
     Iterator<ArrayList<Writable>> fileContentIterator;
 

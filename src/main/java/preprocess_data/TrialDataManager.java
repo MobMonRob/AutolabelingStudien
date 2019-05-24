@@ -11,6 +11,9 @@ import java.util.Iterator;
 import java.util.Set;
 
 //manages json-parsing, normalization and transformation of trial-data
+
+/*Eine bessere Design-Entscheidung wäre an dieser Stelle eine Schnittstelle,
+ sodass das JSON-Format flexibel festgelegt werden kann */
 public class TrialDataManager {
 
     private Iterator<Frame> frameIterator;
@@ -27,7 +30,7 @@ public class TrialDataManager {
     }
 
     public TrialDataManager(TrialDataTransformation dataTransformer) {
-        this(dataTransformer,null,null);
+        this(dataTransformer, null, null);
     }
 
     public void setTrialContent(JsonArray trialData) {
@@ -55,7 +58,7 @@ public class TrialDataManager {
     }
 
     /*Die JSON-Daten des Trails werden eingelesen. Alle Frames eines Trials werden in Frame-Objekte umgewandelt und in einer
-    * Array-Liste gespeichert. Aus der Liste wird ein Iterator erzeugt*/
+     * Array-Liste gespeichert. Aus der Liste wird ein Iterator erzeugt*/
     private void getFramesFromJson(JsonArray trialData) {
         final ArrayList<Frame> currentFrames = new ArrayList<>();
         for (JsonElement trialDatum : trialData) {
