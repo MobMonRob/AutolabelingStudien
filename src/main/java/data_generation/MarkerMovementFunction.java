@@ -2,7 +2,6 @@ package data_generation;
 
 import preprocess_data.data_model.Coordinate3D;
 
-//TODO: refactor --> merge Direction function and this class --> takes only stepwidth from outside --> transform with params for each dimension
 class MarkerMovementFunction {
 
     //3D-function: f(x,y) = coefficientX*x^exponentX + coefficientY*y^exponentY
