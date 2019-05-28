@@ -72,7 +72,6 @@ public class TestNN {
         System.out.println(evaluation.stats(false, true));
     }
 
-
     //Konfiguration des MLP
     private static MultiLayerConfiguration getNNConfig(Set<String> markers) {
         final int numInputs = markers.size() * 3;
@@ -83,7 +82,7 @@ public class TestNN {
         return new NeuralNetConfiguration.Builder()
                 .seed(seed)
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
-                .updater(new Sgd(0.1))
+                .updater(new Sgd(0.01))
                 .list()
                 .layer(0, new DenseLayer.Builder().nIn(numInputs).nOut(hiddenInputs).activation(Activation.TANH).weightInit(WeightInit.NORMAL).build())
                 .layer(1, new DenseLayer.Builder().nIn(hiddenInputs).nOut(hiddenInputs).activation(Activation.RELU).weightInit(WeightInit.RELU_UNIFORM).build())
