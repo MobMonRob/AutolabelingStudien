@@ -7,10 +7,10 @@ Zur Verwaltung der Dependencies des Projekts wird Maven verwendet. Zum Öffnen d
 __Hinweis:__ Es kann zu Problemen mit der Java-Version kommen. Daher sollte vor dem Kompilieren überprüft werden, ob die Target-JDK richtig gesetzt ist. ([Setting Target SDK](https://blogs.oracle.com/roumen/netbeans-quick-tip-1-setting-target-jdk)). Zudem sollten die Project-Settings überprüft werden.
 Empfohlene Java-Version: 8+.
 
-##Aufbau des Projekts
+## Aufbau des Projekts
 Das Projekt wird mit der Java-Bibliothek __DL4J__ (Deep Learning for Java) umgesetzt. Zum Einlesen der JSON-Dateien wird die Bibliothek __Datavec__ verwendet, die Bestandteil von DL4J ist. 
 
-###Projektstruktur
+### Projektstruktur
 
 + __src/main/java__
     + __data_generation &rarr;__ *Enhält Klassen zum Generieren von eigenen Markerdaten. Bei der weiteren Verwendung des Repositories kann dieser Ordner ignoriert werden. (kurze Anleitung in der Testklasse)*
@@ -37,13 +37,13 @@ Das Projekt wird mit der Java-Bibliothek __DL4J__ (Deep Learning for Java) umges
             + __marker_distance_labeling &rarr;__ *Tests, die die Distanzen der Marker als Features verwenden.*
             + __one_marker_labeling &rarr;__ *Alle Tests, bei dem sich ein neuronales Netz auf einen Marker spezialisiert. (Multilayer Perceptron und CNN)*
             
-####Hinweise zum Training:
+#### Hinweise zum Training:
 1. Pfade in den Testdateien müssen entsprechend angepasst werden.
 2. Nur JSON-Dateien eines bestimmten Formats können verwendet werden.
 3. Achtung vor NULL-Markern in den JSON-Dateien. Mit diesen ist kein Training möglich!
 4. In der pom.xml kann festgelegt werden, ob mit der CPU oder GPU trainiert wird. (siehe Kommentare)
 
-##Ausblick
+## Ausblick
 Durch die Studienarbeit wurde eine Basis zum Einlesen und zur Vorverarbeitung von Markerdaten aus dem Motion Capturing geschaffen. Die Schritte der Vorverarbeitung können durch die definierten Schnittstellen angepasst und erweitert werden.<br>
 In der Studienarbeit wurden zudem verschiedene Architekturen von neuronalen Netzen und verschiedene Arten von Trainingsdatensätzen getestet. Auf Basis dieses Repositories und der darin bereitgestellten Architekturen können weitere Tests auf besseren Rechnern durchgeführt werden. Vor allem bei LSTMs und sequentiellen Datensätzen besteht Potenzial zur Verbesserung.
 
