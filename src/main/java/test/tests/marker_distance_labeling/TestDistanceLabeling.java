@@ -2,7 +2,6 @@ package test.tests.marker_distance_labeling;
 
 import datavec.JsonTrialRecordReader;
 import org.datavec.api.split.FileSplit;
-import org.datavec.api.writable.Writable;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
@@ -19,12 +18,10 @@ import org.nd4j.evaluation.classification.Evaluation;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
-import org.nd4j.linalg.dataset.api.preprocessor.NormalizerMinMaxScaler;
 import org.nd4j.linalg.learning.config.Sgd;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
-import preprocess_data.TrialDataManager;
-import preprocess_data.builders.TrialDataManagerBuilder;
 import preprocess_data.TrialDataTransformation;
+import preprocess_data.builders.TrialDataManagerBuilder;
 import preprocess_data.data_manipulaton.FrameManipulationStrategy;
 import preprocess_data.data_manipulaton.FrameShuffleManipulator;
 import preprocess_data.data_model.Coordinate3D;
@@ -36,32 +33,42 @@ import test.tests.Helper;
 
 import java.io.File;
 
+/*
+Testen des Trainings der Distanzen zum Nullpunkt (entspricht Schwerpunkt, da normalisiert).
+*/
 public class TestDistanceLabeling {
     public static void main(String[] args) throws Exception {
-        String[] allowedFileFormat = {"json"};
-        //Input Data
-        File trainDirectory = new File("C:\\Users\\Nico Rinck\\Documents\\DHBW\\Studienarbeit\\Daten_Studienarbeit\\trainData\\train");
-        File testDirectory = new File("C:\\Users\\Nico Rinck\\Documents\\DHBW\\Studienarbeit\\Daten_Studienarbeit\\testData\\test");
-        FileSplit fileSplitTrain = new FileSplit(trainDirectory, allowedFileFormat);
-        FileSplit fileSplitTest = new FileSplit(testDirectory,allowedFileFormat);
 
-        //Strategies/Assets
-        FrameLabelingStrategy frameLabelingStrategy = new OneTargetDistanceLabeling(new Coordinate3D(0,0,0), "LELB", 35);
+        String[] allowedFileFormat = {"json"}; //Falls sich andere Dateien im Directory befinden
+
+        //Input Data --> Pfade anpassen!
+        File trainDirectory = new File("C:\\Users\\...");
+        File testDirectory = new File("C:\\Users\\...");
+        FileSplit fileSplitTrain = new FileSplit(trainDirectory, allowedFileFormat);
+        FileSplit fileSplitTest = new FileSplit(testDirectory, allowedFileFormat);
+
+        //Konfiguration der Datensätze:
+        //Labeling --> OneTargetDistanceLabeling:
+        //  - Label: Position eines Markers (hier: LELB)
+        //  - Features: Distanz zum Mittelpunkt (Coordinate3D)
+        FrameLabelingStrategy frameLabelingStrategy = new OneTargetDistanceLabeling(new Coordinate3D(0, 0, 0), "LELB", 35);
+        //3-fache Vermehrung der Daten (Mischen der Markerreihenfolge)
         FrameManipulationStrategy manipulationStrategy = new FrameShuffleManipulator(3);
-        TrialNormalizationStrategy normalizationStrategy = new CentroidNormalization(-100,100);
+        //Normalisierung: Abziehen des Schwerpunkts und Skalierung in den Wertebreich [-1,1]
+        TrialNormalizationStrategy normalizationStrategy = new CentroidNormalization(-1, 1);
         TrialDataTransformation transformation = new TrialDataTransformation(frameLabelingStrategy, manipulationStrategy);
         TrialDataManagerBuilder trialDataManager = new TrialDataManagerBuilder(transformation).withNormalization(normalizationStrategy);
 
-        //DataSet Iterators
+        //Initialisieren von RecordReader und DataSetIterator
         JsonTrialRecordReader trainDataReader = new JsonTrialRecordReader(trialDataManager.build());
         JsonTrialRecordReader testDataReader = new JsonTrialRecordReader(trialDataManager.build());
         trainDataReader.initialize(fileSplitTrain);
         testDataReader.initialize(fileSplitTest);
-        for (Writable writable : trainDataReader.next()) {
-            System.out.println(writable);
-        }
 
-        //NN Config
+        RecordReaderDataSetIterator trainIterator = new RecordReaderDataSetIterator(trainDataReader, 20);
+        RecordReaderDataSetIterator testIterator = new RecordReaderDataSetIterator(testDataReader, 20);
+
+        //NN-Config ****************************************************************************************************
         final int numInputs = 35;
         final int outputNum = 35;
         final long seed = 1014L;
@@ -77,34 +84,31 @@ public class TestDistanceLabeling {
                 .layer(1, new DenseLayer.Builder().nIn(35).nOut(35).build())
                 .layer(2, new OutputLayer.Builder(LossFunctions.LossFunction.SQUARED_LOSS).nIn(35).nOut(outputNum).build())
                 .build();
+        //**************************************************************************************************************
 
-        //dataset iterator
-        RecordReaderDataSetIterator trainIterator = new RecordReaderDataSetIterator(trainDataReader, 20);
-        RecordReaderDataSetIterator testIterator = new RecordReaderDataSetIterator(testDataReader,20);
-        DataSet next = trainIterator.next();
-        Helper.printINDArray(next.getFeatures().getRow(0));
-        Helper.printINDArray(next.getLabels().getRow(0));
-
-        //Normalization
+        //Normalization mit DL4J --> nicht verwendet! (nur als Beispiel)
+        /*
         int rangeMin = -1;
         int rangeMax = 1;
-        NormalizerMinMaxScaler normalizerMinMaxScaler = new NormalizerMinMaxScaler(rangeMin,rangeMax);
+        NormalizerMinMaxScaler normalizerMinMaxScaler = new NormalizerMinMaxScaler(rangeMin, rangeMax);
         normalizerMinMaxScaler.fit(trainIterator);
         trainIterator.setPreProcessor(normalizerMinMaxScaler);
-        NormalizerMinMaxScaler normalizerMinMaxScaler1 = new NormalizerMinMaxScaler(rangeMin,rangeMax);
+        NormalizerMinMaxScaler normalizerMinMaxScaler1 = new NormalizerMinMaxScaler(rangeMin, rangeMax);
         normalizerMinMaxScaler1.fit(testIterator);
         testIterator.setPreProcessor(normalizerMinMaxScaler1);
+        */
 
-        //smallDataSetNegRange nn
+        //Init MultiLayerNetwork
         MultiLayerNetwork nn = new MultiLayerNetwork(conf);
         nn.init();
-        EvaluativeListener evaluativeListener = new EvaluativeListener(testIterator,1,InvocationType.EPOCH_END);
+        EvaluativeListener evaluativeListener = new EvaluativeListener(testIterator, 1, InvocationType.EPOCH_END);
         nn.setListeners(new ScoreIterationListener(10000), evaluativeListener);
 
         //Training
-        nn.fit(trainIterator, 1);
+        int epochs = 5;
+        nn.fit(trainIterator, 5);
 
-        //epochs
+        //Ausgabe der Trainingsdaten über die Epochen
         IEvaluation[] evaluations = evaluativeListener.getEvaluations();
         for (IEvaluation singleEvaluation : evaluations) {
             String s = singleEvaluation.stats();
@@ -118,12 +122,13 @@ public class TestDistanceLabeling {
             }
         }
 
+        //finale Evaluation mit Confusion-Matrix
         System.out.println("start evaluation");
         testIterator.reset();
         Evaluation eval = nn.evaluate(testIterator);
         System.out.println(eval.stats(false, true));
 
-        //single eval
+        //Evaluation und Ausgabe eines einzelnen Datensatzes --> Überprüfung der Eingabe und Ausgabewerte
         testIterator.reset();
         DataSet testData = testIterator.next();
         INDArray features = testData.getFeatures();

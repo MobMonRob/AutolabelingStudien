@@ -30,11 +30,6 @@ public class Helper {
         ModelSerializer.writeModel(model, modelSaveFile, true);
     }
 
-    //Laden eines trainierten Modells aus dem Speicher
-    public static Model loadModel(File modelFile) throws IOException {
-        return ModelSerializer.restoreMultiLayerNetwork(modelFile);
-    }
-
     //Ausgeben aller Elemente eines INDArray
     public static void printINDArray(INDArray indArray) {
         double[] array = indArray.toDoubleVector();
