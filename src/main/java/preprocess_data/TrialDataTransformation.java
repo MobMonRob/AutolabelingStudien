@@ -8,7 +8,7 @@ import preprocess_data.labeling.FrameLabelingStrategy;
 import java.util.ArrayList;
 
 /*
-Klasse, die definiert, wie die Frame-Objekte in Writables umgewandelt werden.
+Diese Klasse definiert, wie die Frame-Objekte in Writables umgewandelt werden.
 Bestandteile der Klasse:
 - FrameConverter --> Anwenden der Labeling-Strategie
 - Manipulators --> Liste von Manipulatoren, die vor der Konvertierung angewendet werden (Data Augmentation)

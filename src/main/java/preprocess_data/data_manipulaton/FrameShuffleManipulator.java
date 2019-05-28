@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-//Rückgabe einer beliebigen Anzahl von geshuffelten Frames (Data Augmentation)
+//Rückgabe einer beliebigen Anzahl von geshuffleten Frames (Data Augmentation)
 public class FrameShuffleManipulator implements FrameManipulationStrategy {
 
     private final int amountOfShuffles;

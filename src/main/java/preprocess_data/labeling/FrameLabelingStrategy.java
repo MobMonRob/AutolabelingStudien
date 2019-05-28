@@ -8,7 +8,7 @@ import java.util.List;
 
 /*
 Eine Labeling-Strategie definiert, welche Features und Label in den Trainingsdaten verwendet werden sollen.
-Am Ende werden die Features und Labels in entsprechende Writables der Datavec API umgewandelt.
+Am Ende werden die Features und Label in entsprechende Writables der Datavec API umgewandelt.
 */
 public interface FrameLabelingStrategy {
 

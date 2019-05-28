@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 /*
-RecordReader, der die Daten eines Trials aus einem fest definierten JSON-Format einließt. Diese Format wird im
+RecordReader, der die Daten eines Trials aus einem fest definierten JSON-Format einliest. Dieses Format wird im
 JsonToTrialParser definiert, der Teil des TrialDataManagers ist.
 
 Die Konfiguration der Vorverarbeitung wird durch den bei der Initialisierung übergebenen TrialDataManager möglich.

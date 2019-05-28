@@ -76,6 +76,18 @@ public class TestDistanceToMarkerLabeling {
         MultiLayerNetwork multiLayerNetwork = new MultiLayerNetwork(multiLayerConfiguration);
         multiLayerNetwork.init();
 
+        //Anmerkung: Stand jetzt werden die Daten noch nicht skaliert! Folgend: entsprechender Code zur Skalierung
+        /*
+        int rangeMin = -1;
+        int rangeMax = 1;
+        NormalizerMinMaxScaler normalizerMinMaxScaler = new NormalizerMinMaxScaler(rangeMin, rangeMax);
+        normalizerMinMaxScaler.fit(trainData);
+        trainData.setPreProcessor(normalizerMinMaxScaler);
+        NormalizerMinMaxScaler normalizerMinMaxScaler1 = new NormalizerMinMaxScaler(rangeMin, rangeMax);
+        normalizerMinMaxScaler1.fit(testData);
+        testData.setPreProcessor(normalizerMinMaxScaler1);
+        */
+
         //Training
         int epochs = 1;
         multiLayerNetwork.fit(trainData, epochs);

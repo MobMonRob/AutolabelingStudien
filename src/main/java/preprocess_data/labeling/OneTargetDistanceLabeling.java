@@ -15,7 +15,7 @@ gewählt werden.
 Labels: Position eines bestimmten Markers
 
 targetPoint: Punkt zu dem die Distanz berechnet wird.
-targetLabel: Marker auf den das neuronale Netz trainiert wird (Label = Postion des Markers in den Eingabedaten)
+targetLabel: Marker auf den das neuronale Netz trainiert wird. (Label = Position des Markers in den Eingabedaten)
 */
 public class OneTargetDistanceLabeling implements FrameLabelingStrategy {
 

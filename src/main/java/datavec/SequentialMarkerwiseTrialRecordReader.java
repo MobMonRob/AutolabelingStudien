@@ -27,7 +27,7 @@ Um Sequenzen von ganzen Frames zurückzugeben, müsste ein anderer SequenceRecor
 Designprobleme:
 Diese Klasse hat zu viele Verantwortlichkeiten. Besser wäre es, wenn das Labeling der Datensätze in eine andere Klasse
 ausgelagert und abstrahiert wird. Dadurch könnten unterschiedliche Strategien zum Labeling von Daten mit diesem
-RecordReader umgesetzt werden.
+RecordReader umgesetzt werden. (Eingebunden in den TrialDataManager)
 */
 public class SequentialMarkerwiseTrialRecordReader extends JsonTrialRecordReader implements SequenceRecordReader {
 

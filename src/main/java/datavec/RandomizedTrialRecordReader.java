@@ -9,7 +9,7 @@ import java.util.*;
 
 /*
 Diese Klasse ist eine Art Wrapper für den JsonTrialRecordReader. Ein festgelegte Anzahl an Frames wird in einem
-Storage gehalten und geshufflet. Dadurch wird die Reihenfolge der Frames verändert
+Storage gehalten und geshufflet. Dadurch wird die Reihenfolge der Frames verändert.
 
 Die Konfiguration der Vorverarbeitung wird durch den bei der Initialisierung übergebenen TrialDataManager möglich.
 Bei der Initialisierung kann zudem die Größe des Speichers festgelegt werden. (storageSize)

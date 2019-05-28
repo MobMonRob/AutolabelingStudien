@@ -18,6 +18,7 @@ import org.nd4j.evaluation.classification.Evaluation;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
+import org.nd4j.linalg.dataset.api.preprocessor.NormalizerMinMaxScaler;
 import org.nd4j.linalg.learning.config.Sgd;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 import preprocess_data.TrialDataTransformation;
@@ -86,8 +87,7 @@ public class TestDistanceLabeling {
                 .build();
         //**************************************************************************************************************
 
-        //Normalization mit DL4J --> nicht verwendet! (nur als Beispiel)
-        /*
+        //Normalization mit DL4J --> Oben werden nur die Markerkoordinaten skaliert, nicht die berechneten Distanzen
         int rangeMin = -1;
         int rangeMax = 1;
         NormalizerMinMaxScaler normalizerMinMaxScaler = new NormalizerMinMaxScaler(rangeMin, rangeMax);
@@ -96,7 +96,6 @@ public class TestDistanceLabeling {
         NormalizerMinMaxScaler normalizerMinMaxScaler1 = new NormalizerMinMaxScaler(rangeMin, rangeMax);
         normalizerMinMaxScaler1.fit(testIterator);
         testIterator.setPreProcessor(normalizerMinMaxScaler1);
-        */
 
         //Init MultiLayerNetwork
         MultiLayerNetwork nn = new MultiLayerNetwork(conf);

@@ -21,7 +21,7 @@ Die Verantwortlichkeiten der Klasse wurden verteilt:
 Zur Konfiguration des Vorverarbeitungsprozesses kann die Strategie zur Normalisierung ausgetauscht werden. Zudem kann
 die TrialDataTransformation konfiguriert werden.
 Bei der Initialisierung kann ein Set von Strings übergeben werden. Dadurch werden nur noch Marker eingelesen, die
-sich in dem Set befinden.
+sich in dem Set definiert wurden.
 
 Hinweis: zum Erstellen der Klasse gibt es einen Builder (Empfohlen!)
 
@@ -29,8 +29,9 @@ Probleme im Design:
 Leider ist der TrialDataManager nur für das Verarbeiten einzelner Frames optimiert. Die Strategien zur Manipulation,
 Normalisierung und Labeling der Daten sind daher ebenfalls auf einzelne Frames beschränkt.
 Zur Verarbeitung von Frame-Sequenzen müsste somit ein SequenceDataManager entwickelt werden, der in vielen Punkten
-redundant ist. Optimaler wäre eine Klasse, die den Vorerarbeitungsprozess weiter abstrahiert und Strategien, die sowohl
-einzelne Frames als auch Frame-Sequenzen verarbeiten können.
+redundant ist. Optimaler wäre eine Klasse, die den Vorverarbeitungsprozess weiter abstrahiert. Die Strategien würden dann
+sowohl einzelne Frames als auch Frame-Sequenzen verarbeiten.
+Möglich wäre beispielsweise das Abstrahieren von einzelnen Frames und Sequenzenen zu einer Oberklasse --> DataSet/Record
 */
 public class TrialDataManager {
 
