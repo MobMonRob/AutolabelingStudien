@@ -32,3 +32,19 @@ Das Projekt wird mit der Java-Bibliothek __DL4J__ (Deep Learning for Java) umges
         + __preprocessors &rarr;__ *Enhält Preprocessor-Klassen, die den kompletten Vorverarbeitungsprozess durchführen und die fertigen Daten in ein Verzeichnis ablegen. (Wichtig zur Performance-Optimierung, da die Vorverarbeitungsschritte nur einmal durchgeführt werden müssen)*
     + __test &rarr;__ *Dieser Ordner enthält laufähige Klassen zur Durchführung des Trainings. Zudem werden verschiedene Netzwerk-Konfigurationen definiert*    
         + __execution &rarr;__ *Enhält Klassen zum automatischen Trainieren von vielen verschiedenen Netzwerk-Konfiguration. Bei der weiteren Verwendung dieses Repositories kann dieser Ordner ignoriert werden.*
+        + __tests &rarr;__ *Testklassen der unterschiedlichen Lösungsansätze*
+            + __lstm &rarr;__ *Alle Tests, die auf LSTMs basieren.*
+            + __marker_distance_labeling &rarr;__ *Tests, die die Distanzen der Marker als Features verwenden.*
+            + __one_marker_labeling &rarr;__ *Alle Tests, bei dem sich ein neuronales Netz auf einen Marker spezialisiert. (Multilayer Perceptron und CNN)*
+            
+####Hinweise zum Training:
+1. Pfade in den Testdateien müssen entsprechend angepasst werden.
+2. Nur JSON-Dateien eines bestimmten Formats können verwendet werden.
+3. Achtung vor NULL-Markern in den JSON-Dateien
+4. In der pom.xml kann festgelegt werden, ob mit der CPU oder GPU trainiert wird. (siehe Kommentare)
+
+##Ausblick
+Durch die Studienarbeit wurde eine Basis zum Einlesen und zur Vorverarbeitung von Markerdaten aus dem Motion Capturing geschaffen. Die Schritte der Vorverarbeitung können durch die definierten Schnittstellen angepasst und erweitert werden.<br>
+In der Studienarbeit wurden zudem verschiedene Architekturen von neuronalen Netzen und verschieden Arten von Trainingsdatensätzen getestet. Auf Basis dieses Repositories und der darin bereitgestellten Architekturen können weitere Tests auf besseren Rechnern durchgeführt werden. Vor allem bei LSTMs und sequentiellen Datensätzen besteht großes Potenzial zur Verbesserung.
+
+        

@@ -17,7 +17,7 @@ import java.util.Set;
 
 /*
 Verschiedene Netzwerk-Architekturen, die auf CNNs basieren. Jedes CNN hat einen 3x1 Kernel, der die Koordinatenwerte
-eines Markers verrechnet
+eines Markers verrechnet.
 
 Hinweis: In den folgenden Konfigurationen werden ComputationGraphs verwendet. Für die Umsetzung müssen die Daten
 umgewandelt und umstrukturiert werden. Dies wird mithilfe des Input-Types und mit einer (oder mehreren)
