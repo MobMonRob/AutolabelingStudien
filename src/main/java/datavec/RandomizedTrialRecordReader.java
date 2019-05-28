@@ -7,7 +7,14 @@ import preprocess_data.TrialDataManager;
 import java.io.IOException;
 import java.util.*;
 
-//wraps JsonTrialRecordReader and implements randomization for the trialData after preprocessing.
+/*
+Diese Klasse ist eine Art Wrapper für den JsonTrialRecordReader. Ein festgelegte Anzahl an Frames wird in einem
+Storage gehalten und geshufflet. Dadurch wird die Reihenfolge der Frames verändert.
+
+Die Konfiguration der Vorverarbeitung wird durch den bei der Initialisierung übergebenen TrialDataManager möglich.
+Bei der Initialisierung kann zudem die Größe des Speichers festgelegt werden. (storageSize)
+Achtung: Bei zu großem Storage kann die Performance der Vorverarbeitung durch den Garbage Collector beeinflusst werden.
+*/
 public class RandomizedTrialRecordReader extends JsonTrialRecordReader {
 
     private final int storageSize;

@@ -1,4 +1,4 @@
-package preprocess_data;
+package preprocess_data.preprocessors;
 
 import org.datavec.api.records.reader.SequenceRecordReader;
 import org.datavec.api.records.reader.impl.csv.CSVSequenceRecordReader;
@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+//Vorverarbeitungsprozess für SequenceRecordReader. Die Daten werden im CSV-Format persistiert
 public class SequentialDataPreprocessor extends DataPreprocessor<SequenceRecordReader> {
 
     @Override

@@ -10,7 +10,29 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 
-//manages json-parsing, normalization and transformation of trial-data
+/*
+Zentrale Klasse für den Vorverarbeitungsprozess, die in den RecordReadern verwendet wird.
+
+Die Verantwortlichkeiten der Klasse wurden verteilt:
+- TrialDataTransformation --> definiert, wie die Daten eines Frames in Writables umgewandelt werden
+- JsonToTrialParser --> Umwandlung der Json-Daten in Java-Objekte
+- TrialNormalizationStrategie --> Strategie zur Normalisierung der Daten
+
+Zur Konfiguration des Vorverarbeitungsprozesses kann die Strategie zur Normalisierung ausgetauscht werden. Zudem kann
+die TrialDataTransformation konfiguriert werden.
+Bei der Initialisierung kann ein Set von Strings übergeben werden. Dadurch werden nur noch Marker eingelesen, die
+sich in dem Set definiert wurden.
+
+Hinweis: zum Erstellen der Klasse gibt es einen Builder (Empfohlen!)
+
+Probleme im Design:
+Leider ist der TrialDataManager nur für das Verarbeiten einzelner Frames optimiert. Die Strategien zur Manipulation,
+Normalisierung und Labeling der Daten sind daher ebenfalls auf einzelne Frames beschränkt.
+Zur Verarbeitung von Frame-Sequenzen müsste somit ein SequenceDataManager entwickelt werden, der in vielen Punkten
+redundant ist. Optimaler wäre eine Klasse, die den Vorverarbeitungsprozess weiter abstrahiert. Die Strategien würden dann
+sowohl einzelne Frames als auch Frame-Sequenzen verarbeiten.
+Möglich wäre beispielsweise das Abstrahieren von einzelnen Frames und Sequenzenen zu einer Oberklasse --> DataSet/Record
+*/
 public class TrialDataManager {
 
     private Iterator<Frame> frameIterator;
@@ -27,9 +49,10 @@ public class TrialDataManager {
     }
 
     public TrialDataManager(TrialDataTransformation dataTransformer) {
-        this(dataTransformer,null,null);
+        this(dataTransformer, null, null);
     }
 
+    //Methode, die der RecordReader aufruft, um ein JSON-Array mit Frames für den Vorverarbeitungsprozess zu setzen.
     public void setTrialContent(JsonArray trialData) {
         if (normalizationStrategy != null) {
             normalizationStrategy = normalizationStrategy.getNewInstance();
@@ -38,6 +61,10 @@ public class TrialDataManager {
         getFramesFromJson(trialData);
     }
 
+    /*
+    Methode um einen Frame an den RecordReader zurückzugeben. (Falls die Daten bei der Transformation vermehrt werden,
+    gibt diese Methode mehrere Frames zurück)
+    */
     public ArrayList<ArrayList<Writable>> getNextTrialContent() {
         final Frame currentFrame = frameIterator.next();
         return new ArrayList<>(transformFrameToWritable(currentFrame));
@@ -47,6 +74,7 @@ public class TrialDataManager {
         return frameIterator.hasNext();
     }
 
+    //Umwandlung der Frame-Daten in Writables
     private ArrayList<ArrayList<Writable>> transformFrameToWritable(Frame frame) {
         if (normalizationStrategy != null) {
             return dataTransformer.transformFrameData(normalizationStrategy.normalizeFrame(frame));
@@ -54,8 +82,10 @@ public class TrialDataManager {
         return dataTransformer.transformFrameData(frame);
     }
 
-    /*Die JSON-Daten des Trails werden eingelesen. Alle Frames eines Trials werden in Frame-Objekte umgewandelt und in einer
-    * Array-Liste gespeichert. Aus der Liste wird ein Iterator erzeugt*/
+    /*
+    Die JSON-Daten des Trails werden eingelesen. Alle Frames eines Trials werden in Frame-Objekte umgewandelt und in einer
+    Array-Liste gespeichert. Aus der Liste wird ein Iterator erzeugt.
+    */
     private void getFramesFromJson(JsonArray trialData) {
         final ArrayList<Frame> currentFrames = new ArrayList<>();
         for (JsonElement trialDatum : trialData) {

@@ -9,6 +9,14 @@ import preprocess_data.data_model.Frame;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+Features: Distanzen jedes Markers zu einem TargetPoint werden als Features verwendet. Der TargetPoint kann beliebig
+gewählt werden.
+Labels: Position eines bestimmten Markers
+
+targetPoint: Punkt zu dem die Distanz berechnet wird.
+targetLabel: Marker auf den das neuronale Netz trainiert wird. (Label = Position des Markers in den Eingabedaten)
+*/
 public class OneTargetDistanceLabeling implements FrameLabelingStrategy {
 
     private final Coordinate3D targetPoint;

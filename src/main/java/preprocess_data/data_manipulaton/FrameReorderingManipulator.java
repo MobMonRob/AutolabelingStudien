@@ -6,6 +6,12 @@ import preprocess_data.data_model.Marker;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/*
+Hierbei handelt es sich um eine Strategie zum Umsortieren der Markerreihenfolge. (Wird zum Trainieren einer bestimmten
+Markerreihenfolge verwendet)
+Eingabe: Frame
+Ausgabe: mehrere Frames. Eine bestimmte Anzahl wird dabei umsortiert
+*/
 public class FrameReorderingManipulator implements FrameManipulationStrategy {
 
     private final ArrayList<String> correctOrder; //in case order in json-files is different
@@ -38,14 +44,6 @@ public class FrameReorderingManipulator implements FrameManipulationStrategy {
         return resultList;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        correctOrder.forEach(s -> stringBuilder.append(s).append(", "));
-        return "FrameReorderingManipulator(reorderedFrames: " + reorderedFrames + ", originalFrames: " + originalFrames
-                + ", originalOrder: "  + stringBuilder.toString() + ")";
-    }
-
     private Frame getOrderedFrame(Frame frame) {
         if (correctOrder != null) {
             ArrayList<Marker> correctMarkers = new ArrayList<>();
@@ -59,5 +57,13 @@ public class FrameReorderingManipulator implements FrameManipulationStrategy {
             return new Frame(correctMarkers);
         }
         return frame;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        correctOrder.forEach(s -> stringBuilder.append(s).append(", "));
+        return "FrameReorderingManipulator(reorderedFrames: " + reorderedFrames + ", originalFrames: " + originalFrames
+                + ", originalOrder: "  + stringBuilder.toString() + ")";
     }
 }

@@ -5,7 +5,7 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-//forward frame includes the first Frame
+//generate frames of an trial
 class FrameGenerator {
 
     private final ArrayList<MarkerGenerator> markerGenerators;

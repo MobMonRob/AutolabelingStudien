@@ -3,6 +3,7 @@ package preprocess_data.data_normalization;
 import preprocess_data.data_model.Coordinate3D;
 import preprocess_data.data_model.Marker;
 
+//Diese Klasse implementiert das Skalieren der Markerkoordinaten
 class MarkerValueScaler {
 
     private final int minValue;

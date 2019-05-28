@@ -1,8 +1,9 @@
-package preprocess_data;
+package preprocess_data.preprocessors;
 
 import java.io.File;
 
-public class SaveDirectoryManager {
+//Metoden zur Verwaltung der Save-Files
+class SaveDirectoryManager {
 
     static void initDirectory(String directoryString, String saveFileString) {
         File directory = new File(directoryString);

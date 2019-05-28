@@ -14,6 +14,21 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.*;
 
+/*
+RecordReader zum Erstellen von sequentiellen Datensätzen. Die Länge der Sequenz bei der Initialisierung über das
+sequenceLength-Attribut festgelegt werden.
+Die Konfiguration der Vorverarbeitung wird durch den bei der Initialisierung übergebenen TrialDataManager möglich.
+
+Durch diesen RecordReader werden die Daten jedes Markers separat ausgegeben. Das bedeutet, dass einzelne Markerbahnen
+zurückgegeben werden. Das Label jedes Zeitschritts ist immer die nächste Position des Markers.
+
+Um Sequenzen von ganzen Frames zurückzugeben, müsste ein anderer SequenceRecordReader entwickelt werden.
+
+Designprobleme:
+Diese Klasse hat zu viele Verantwortlichkeiten. Besser wäre es, wenn das Labeling der Datensätze in eine andere Klasse
+ausgelagert und abstrahiert wird. Dadurch könnten unterschiedliche Strategien zum Labeling von Daten mit diesem
+RecordReader umgesetzt werden. (Eingebunden in den TrialDataManager)
+*/
 public class SequentialMarkerwiseTrialRecordReader extends JsonTrialRecordReader implements SequenceRecordReader {
 
     private final boolean hasSequenceLength;
@@ -62,6 +77,7 @@ public class SequentialMarkerwiseTrialRecordReader extends JsonTrialRecordReader
         return resultSequence;
     }
 
+    //Methode zum Labeling der Datensätze
     private void labelSequence(List<List<Writable>> nextUnlabeledSequence) {
         final int length = nextUnlabeledSequence.size();
         for (int i = 0; i < length; i++) {

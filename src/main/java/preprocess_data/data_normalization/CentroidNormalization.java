@@ -7,7 +7,7 @@ import preprocess_data.data_model.Marker;
 import java.util.ArrayList;
 
 //subtract centroid from any marker in trial. If set, all values will be scaled between minValue and maxValue.
-//1. centroid subtraction 2. scale new (subtracted) values
+//1. centroid subtraction 2. scale new (subtracted) values (executed in this order)
 public class CentroidNormalization implements TrialNormalizationStrategy {
 
     private final Coordinate3D addedValues = new Coordinate3D(0, 0, 0);

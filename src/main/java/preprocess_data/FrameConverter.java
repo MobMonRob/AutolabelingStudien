@@ -2,7 +2,6 @@ package preprocess_data;
 
 import org.datavec.api.writable.Writable;
 import preprocess_data.data_model.Frame;
-import preprocess_data.data_model.Marker;
 import preprocess_data.labeling.FrameLabelingStrategy;
 
 import java.util.ArrayList;
