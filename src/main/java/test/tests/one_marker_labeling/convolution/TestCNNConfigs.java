@@ -87,3 +87,4 @@ public class TestCNNConfigs {
         System.out.println(eval.stats(true, true));
     }
 }
+
