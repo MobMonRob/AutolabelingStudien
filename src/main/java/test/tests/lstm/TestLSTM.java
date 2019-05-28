@@ -59,7 +59,7 @@ public class TestLSTM {
         //Klasse beliebig oft ausgeführt werden, ohne das der Vorverarbeitunsprozess wiederholt wird.
         if (SequentialDataPreprocessor.directoryHasData(saveDirectoryTest)
                 && SequentialDataPreprocessor.directoryHasData(saveDirectoryTrain)) {
-            //Safe-Directory hat Daten --> einfaches Inititalisieren von SequenceRecordReadern
+            //Save-Directory hat Daten --> einfaches Inititalisieren von SequenceRecordReadern
             recordReaderTrain = dataPreprocessor.getReader(saveDirectoryTrain);
             recordReaderTest = dataPreprocessor.getReader(saveDirectoryTest);
         } else {
