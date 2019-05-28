@@ -24,11 +24,11 @@ Das Projekt wird mit der Java-Bibliothek __DL4J__ (Deep Learning for Java) umges
     + __preprocess_data &rarr;__ *Dieser Ordner enthält alle Klassen, die zur Parsen, Weiterverarbeiten und Konvertieren der JSON-Daten in den RecordReadern verwendet werden.*
 
         *Der komplette Vorverarbeitungsprozess wird in der Klasse __TrialDataManager__ definiert. Durch die Verwendung des [Strategie-Patterns](https://de.wikipedia.org/wiki/Strategie_(Entwurfsmuster)) können alle Bestandteile des Vorberarbeitungsprozesses ausgetauscht werden. Durch die Schnittstellen können zudem relativ einfach neue Strategien entwickelt und eingebunden werden.*
-        + __builders &rarr;__ *Enhält [Builder](https://de.wikipedia.org/wiki/Erbauer_(Entwurfsmuster))-Klassen, zum übersichtlicheren Initialisieren der zentralen Klassen der Vorverarbeitung*
-        + __data_manipulation &rarr;__ *Enhält alle Manipulatoren und die Schnittstelle zum definieren neuer Manipulationsstrategien.*
+        + __builders &rarr;__ *Enhält [Builder](https://de.wikipedia.org/wiki/Erbauer_(Entwurfsmuster))-Klassen, zum übersichtlicheren Initialisieren der zentralen Klassen der Vorverarbeitung.*
+        + __data_manipulation &rarr;__ *Enhält alle Manipulatoren und die Schnittstelle zum Definieren neuer Manipulationsstrategien.*
         + __data_model &rarr;__ *Enthält das Datenmodell für die Vorverarbeitung. (Marker, Frame...)*
         + __data_normalization &rarr;__ *Enhält alle Strategien zur Normalisierung der Markerdaten und die Strategie-Schnittstelle*
-        + __labeling &rarr;__ *Enhält alle Strategien zur Labeling der Markerdaten und die Schnittstelle zum definieren neuer Labeling-Strategien*
+        + __labeling &rarr;__ *Enhält alle Strategien zum Labeling der Markerdaten und die Schnittstelle zum Definieren neuer Labeling-Strategien*
         + __preprocessors &rarr;__ *Enhält Preprocessor-Klassen, die den kompletten Vorverarbeitungsprozess durchführen und die fertigen Daten in ein Verzeichnis ablegen. (Wichtig zur Performance-Optimierung, da die Vorverarbeitungsschritte nur einmal durchgeführt werden müssen)*
     + __test &rarr;__ *Dieser Ordner enthält laufähige Klassen zur Durchführung des Trainings. Zudem werden verschiedene Netzwerk-Konfigurationen definiert*    
-        + __execution &rarr;__ *Enhält Klassen zum automatischen Trainieren von vielen verschiedenen Netzwerk-Konfiguration. Diesen Ordner bitte komplett ignorieren.*
+        + __execution &rarr;__ *Enhält Klassen zum automatischen Trainieren von vielen verschiedenen Netzwerk-Konfiguration. Bei der weiteren Verwendung dieses Repositories kann dieser Ordner ignoriert werden.*

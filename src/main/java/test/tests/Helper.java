@@ -1,7 +1,6 @@
 package test.tests;
 
 import org.deeplearning4j.nn.api.Model;
-import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.util.ModelSerializer;
 import org.nd4j.evaluation.classification.Evaluation;
@@ -10,11 +9,19 @@ import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
+/*
+Diese Klasse enhält Helper-Methoden, die für die Tests verwendet werden können.
+
+Hinweis: Helper-Klassen sind Indikator für schlechtes Design. Alle folgenden Methoden könnten auch in eigenen Klassen
+implementiert werden.
+*/
 public class Helper {
 
+    /*Speichern eines trainierten Models mit der entsprechenden Methode von DL4J. Mit den Parametern kann der Speicherort
+    * und der Dateiname spezifiziert werden. Jeder Dateiname wird automatisch mit einem Index versehen, sodass das
+    * Training mehrfach augeführt werden kann, ohne einen neuen Dateinamen anzugeben */
     public static void saveModel(Model model, String saveDirectoryPath, String modelName) throws IOException {
         File modelSaveFile = new File(saveDirectoryPath + "\\" + modelName + "-v1.zip");
         while (modelSaveFile.exists()) {
@@ -23,10 +30,12 @@ public class Helper {
         ModelSerializer.writeModel(model, modelSaveFile, true);
     }
 
+    //Laden eines trainierten Modells aus dem Speicher
     public static Model loadModel(File modelFile) throws IOException {
         return ModelSerializer.restoreMultiLayerNetwork(modelFile);
     }
 
+    //Ausgeben aller Elemente eines INDArray
     public static void printINDArray(INDArray indArray) {
         double[] array = indArray.toDoubleVector();
         for (int i = 0; i < array.length; i++) {
@@ -35,6 +44,7 @@ public class Helper {
         System.out.println();
     }
 
+    //Methode, die den nächsten freien Dateinamen auf Basis eines Indexes zurückgibt.
     public static File getNextPossibleFile(File modelSaveFile) {
         String currentPath = modelSaveFile.getPath();
         String fileName = modelSaveFile.getName();
@@ -45,7 +55,8 @@ public class Helper {
         return new File(modelSaveFile.getParent() + "\\" + modelName + "-v" + ++integer + getFileExtension(modelSaveFile));
     }
 
-    static String getFileExtension(File file) {
+    //Rückgabe des File-Extension einer Datei
+    public static String getFileExtension(File file) {
         String name = file.getName();
         int lastIndexOf = name.lastIndexOf(".");
         if (lastIndexOf == -1) {
@@ -54,20 +65,14 @@ public class Helper {
         return name.substring(lastIndexOf);
     }
 
+    //Methode zum Ausgeben einer HashMap
     public static <T, V> void logHashMap(HashMap<T, V> hashMap) {
         for (T t : hashMap.keySet()) {
             System.out.println("Key: " + t + ", Value: " + hashMap.get(t));
         }
     }
 
-    public static ArrayList<MultiLayerConfiguration> getConfigsFromJSON(ArrayList<String> jsonStrings) {
-        ArrayList<MultiLayerConfiguration> configurations = new ArrayList<>();
-        for (String s : jsonStrings) {
-            configurations.add(MultiLayerConfiguration.fromJson(s));
-        }
-        return configurations;
-    }
-
+    //Ausgeben von Evaluationsdetails eines Testdatensatzes
     public static void logSingleEvaluationDetails(MultiLayerNetwork network, DataSetIterator testIterator) {
         System.out.println("start evaluation");
         testIterator.reset();
